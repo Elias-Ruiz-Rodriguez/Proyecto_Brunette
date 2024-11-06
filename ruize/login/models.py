@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
 
 class Empleados(models.Model):
     dni_empl = models.CharField(primary_key=True, max_length=20)
@@ -21,11 +22,17 @@ class Empleados(models.Model):
 
 class Login(models.Model):
     id_login = models.BigAutoField(primary_key=True)
-    dni_empleado = models.ForeignKey(Empleados, on_delete=models.CASCADE)
-    usuario = models.CharField(max_length=50)
-    contraseña = models.CharField(max_length=50) #Cifrar la contraseña xd
+    dni_empl = models.ForeignKey('Empleados', on_delete=models.CASCADE)
+    username = models.CharField(max_length=50, unique=True)
+    password = models.CharField(max_length=255)  # Aumentar el tamaño para contraseñas cifradas
     ultimo_acceso = models.DateTimeField(null=True, blank=True)
     hs_login = models.DateTimeField(auto_now_add=True)
 
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
+
     def __str__(self):
-        return f"{self.usuario} - Último acceso: {self.ultimo_acceso}"
+        return f"{self.username} - Último acceso: {self.ultimo_acceso}"

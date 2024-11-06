@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ProyectoBrunetteConfig(AppConfig):
+class Login(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'proyecto_brunette'
+    name = 'login'

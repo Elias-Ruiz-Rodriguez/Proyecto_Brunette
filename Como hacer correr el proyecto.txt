@@ -3,3 +3,6 @@
 3- http://localhost:8000/admin/ para ver donde esta 
 4- Activar el entorno virtualenv ./venv/Scripts/activate
 5- python -m pip list para ver las versiones
+Migrar:
+ python manage.py makemigrations
+ python manage.py migrate

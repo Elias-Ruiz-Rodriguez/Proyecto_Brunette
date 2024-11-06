@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5cce5;
+            font-family: Arial, sans-serif;
+        }
+        .login-container {
+            background-color: #b55a8c;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+        }
+        .login-container h2 {
+            color: #000;
+            margin-bottom: 20px;
+        }
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #f8dff2;
+            color: #8d6c89;
+            font-weight: bold;
+            text-align: center;
+        }
+        .login-container input[type="text"]::placeholder,
+        .login-container input[type="password"]::placeholder {
+            color: #e2afcf;
+            font-weight: bold;
+        }
+        .login-container .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .login-container button {
+            width: 48%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .cancel-btn {
+            background-color: #54343c;
+            color: #fff;
+        }
+        .login-btn {
+            background-color: #f49ed4;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>INICIO DE SESIÓN</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="INGRESE SU USUARIO" required>
+            <input type="password" name="password" placeholder="INGRESE SU CONTRASEÑA" required>
+            <div class="button-container">
+                <button type="reset" class="cancel-btn">CANCELAR</button>
+                <button type="submit" class="login-btn">INICIAR</button>
+            </div>
+        </form>
+        {% if messages %}
+            <div class="error-messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
