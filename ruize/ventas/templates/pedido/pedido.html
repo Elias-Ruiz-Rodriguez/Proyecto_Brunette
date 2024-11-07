@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'pedido/pedido.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h3>Cajero: Ruiz</h3>
+            <div class="time-date">
+                <span class="time">09:15:36</span>
+                <span class="date">27/09/2024</span>
+            </div>
+        </div>
+        <div class="pedido-section">
+            <h2>PEDIDO</h2>
+            <table class="pedido-table">
+                <thead>
+                    <tr>
+                        <th>CANTIDAD</th>
+                        <th>PRODUCTO</th>
+                        <th>ESTADO DEL PEDIDO</th>
+                        <th>PRECIO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán dinámicamente los productos -->
+                </tbody>
+            </table>
+            <div class="total">
+                <span>TOTAL</span>
+                <input type="text" disabled>
+            </div>
+            <button class="cancel-button">CANCELAR</button>
+        </div>
+        <div class="product-input-section">
+            <label for="product">PRODUCTO:</label>
+            <input type="text" id="product" placeholder="Buscar producto...">
+            <label for="quantity">CANTIDAD:</label>
+            <input type="number" id="quantity" min="1">
+            <button class="add-button">AGREGAR</button>
+        </div>
+        <div class="actions">
+            <button class="egreso-ingreso">EGRESO/INGRESO</button>
+            <button class="confirm-button">CONFIRMAR</button>
+        </div>
+    </div>
+</body>
+</html>
