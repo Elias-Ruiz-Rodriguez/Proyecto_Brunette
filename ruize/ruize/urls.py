@@ -22,4 +22,5 @@ from login import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('inicio_sesion/', views.inicio_sesion, name='inicio_sesion'),
+    path('menu/', views.mostrar_menu, name='mostrar_menu'),
 ]
