@@ -10,8 +10,7 @@ class Empleados(models.Model):
     correo_empl = models.EmailField()
     ROL_CHOICES = [
         ('cajero', 'Cajero'),
-        ('cocinero', 'Cocinero'),
-        ('mesero', 'Mesero'),
+        ('gerente', 'Gerente'),
         ('admin', 'Admin'),
     ]
     rol_empl = models.CharField(max_length=20, choices=ROL_CHOICES)
@@ -23,16 +22,10 @@ class Empleados(models.Model):
 class Login(models.Model):
     id_login = models.BigAutoField(primary_key=True)
     dni_empl = models.ForeignKey('Empleados', on_delete=models.CASCADE)
-    username = models.CharField(max_length=50, unique=True)
-    password = models.CharField(max_length=255)  # Aumentar el tamaño para contraseñas cifradas
+    usuario = models.CharField(max_length=50, unique=True)
+    contraseña = models.CharField(max_length=255)
     ultimo_acceso = models.DateTimeField(null=True, blank=True)
     hs_login = models.DateTimeField(auto_now_add=True)
 
-    def set_password(self, raw_password):
-        self.password = make_password(raw_password)
-
-    def check_password(self, raw_password):
-        return check_password(raw_password, self.password)
-
     def __str__(self):
-        return f"{self.username} - Último acceso: {self.ultimo_acceso}"
+        return f"{self.usuario} - Último acceso: {self.ultimo_acceso}"

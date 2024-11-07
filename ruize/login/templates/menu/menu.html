@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botones Centrados</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'menu/menu.css' %}">
+</head>
+<body>
+    <div class="time-date-container">
+        <div class="time-date" id="current-time">12:00</div>
+        <div class="time-date" id="current-date">01/11/2024</div>
+    </div>
+    
+    <div class="button-container">
+        <button class="button">PAGO DE IMP</button>
+        <button class="button">PEDIDO</button>
+        <button class="button">APERTURA DE CAJA</button>
+        <button class="button">CIERRE DE CAJA</button>
+        <button class="button">REGISTRAR USUARIO</button>
+        <button class="button">REGISTRO DE USUARIO</button>
+    </div>
+
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const optionsDate = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            
+            document.getElementById('current-date').innerText = now.toLocaleDateString('es-ES', optionsDate);
+            document.getElementById('current-time').innerText = now.toLocaleTimeString('es-ES', optionsTime);
+        }
+        
+        // Actualizar la hora y la fecha cada segundo
+        setInterval(updateDateTime, 1000);
+        updateDateTime(); // Inicializar al cargar
+    </script>
+</body>
+</html>

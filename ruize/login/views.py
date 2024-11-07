@@ -1,25 +1,24 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Login
-from django.contrib.auth import login as auth_login
 
-def mi_vista(request):
+def inicio_sesion(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
+        usuario = request.POST.get('usuario')
+        contraseña = request.POST.get('contraseña')
+        
+        # Intentar autenticar al usuario
         try:
-            # Buscar el login por el username
-            user_login = Login.objects.get(username=username)
-
-            # Verificar si la contraseña es correcta
-            if user_login.check_password(password):  # Usamos el método check_password para verificar
-                # Si la autenticación es exitosa, hacer login con el empleado
-                auth_login(request, user_login.dni_empleado)  # Autenticación estándar de Django
-                return redirect('apertura_de_caja/apertura_de_caja.html')  # Redireccionar a la página correspondiente
+            user = Login.objects.get(usuario=usuario)
+            if user.contraseña == contraseña:  # Comparación directa sin cifrado
+                # Autenticación exitosa
+                messages.success(request, "Inicio de sesión exitoso")
+                return redirect('menu/menu.html')  # Cambia 'apertura_de_caja' por la ruta que desees
             else:
-                messages.error(request, 'Usuario o contraseña incorrectos.')
+                messages.error(request, "Contraseña incorrecta")
         except Login.DoesNotExist:
-            messages.error(request, 'Usuario o contraseña incorrectos.')
+            messages.error(request, "Usuario no encontrado")
+    
+    return render(request, 'inicio_sesion/inicio_sesion.html')
 
-    return render(request, 'login/inicio_sesion.html')
+#def menu(request):

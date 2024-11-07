@@ -21,5 +21,5 @@ from login import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('inicio_sesion/', views.mi_vista, name='inicio_sesion'),
+    path('inicio_sesion/', views.inicio_sesion, name='inicio_sesion'),
 ]

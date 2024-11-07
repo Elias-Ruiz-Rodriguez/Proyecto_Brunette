@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'inicio_sesion/inicio_sesion.css' %}">
+    
+</head>
+<body>
+    <div class="login-container">
+        <h2>INICIO DE SESIÓN</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="usuario" placeholder="INGRESE SU USUARIO" required>
+            <input type="password" name="contraseña" placeholder="INGRESE SU CONTRASEÑA" required>
+            <div class="button-container">
+                <button type="reset" class="cancel-btn">CANCELAR</button>
+                <button type="submit" class="login-btn">INICIAR</button>
+            </div>
+        </form>
+        {% if messages %}
+            <div class="error-messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
