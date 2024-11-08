@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from login import views as login_views  # Importamos las vistas de login
 from ventas import views as ventas_views  # Importamos las vistas de ventas
 from caja import views as caja_views
@@ -26,6 +26,7 @@ urlpatterns = [
     path('inicio_sesion/', login_views.inicio_sesion, name='inicio_sesion'),
     path('menu/', login_views.mostrar_menu, name='mostrar_menu'),
     path('pedido/', ventas_views.pedido, name='pedido'),
+    path('caja/', include('caja.urls', namespace='caja')),
     path('caja/apertura', caja_views.apertura_caja, name='apertura'),
-    path('caja/cierre', caja_views.cierre_caja, name='ciere')
+    path('caja/cierre', caja_views.cierre_caja, name='ciere'),
 ]
