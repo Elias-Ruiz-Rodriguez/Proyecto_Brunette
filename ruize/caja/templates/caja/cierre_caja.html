@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cierre de Caja</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'caja/cierre_caja.css' %}">
+</head>
+<body>
+
+    <header class="header">
+        <span class="user-info">CAJERO: RUIZ</span>
+    </header>
+
+    <div class="container">
+        <div class="date-time">
+            <span id="hora">09:15:36</span>
+            <span id="fecha">27/09/2024</span>
+        </div>
+
+        <div class="info">
+            <label for="monto-efectivo">MONTO EFECTIVO EN CAJA</label>
+            <input type="text" id="monto-efectivo" value="0.00" readonly>
+
+            <label for="monto-tarjeta">MONTO DINERO EN TARJETA</label>
+            <input type="text" id="monto-tarjeta" value="0.00" readonly>
+
+            <label for="ingreso-dinero">INGRESAR DINERO EN CAJA</label>
+            <input type="text" id="ingreso-dinero" placeholder="0.00">
+        </div>
+
+        <div class="buttons">
+            <button class="cancel-button">CANCELAR</button>
+            <button class="submit-button">CERRAR CAJA</button>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -16,38 +16,72 @@
                 <span class="date">27/09/2024</span>
             </div>
         </div>
+        
         <div class="pedido-section">
             <h2>PEDIDO</h2>
             <table class="pedido-table">
                 <thead>
                     <tr>
+                        <th>SELECCIONAR</th>
                         <th>CANTIDAD</th>
                         <th>PRODUCTO</th>
-                        <th>ESTADO DEL PEDIDO</th>
                         <th>PRECIO</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Aquí se insertarán dinámicamente los productos -->
+                    {% for producto in productos %}
+                    <tr>
+                        <td><input type="checkbox" class="product-select"></td>
+                        <td>{{ producto.stock_actual_prod }}</td>
+                        <td>{{ producto.nombre_prod }}</td>
+                        <td>{{ producto.precio_prod }}</td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
             <div class="total">
                 <span>TOTAL</span>
-                <input type="text" disabled>
+                <input type="text" id="total" disabled>
             </div>
             <button class="cancel-button">CANCELAR</button>
         </div>
+        
         <div class="product-input-section">
-            <label for="product">PRODUCTO:</label>
-            <input type="text" id="product" placeholder="Buscar producto...">
-            <label for="quantity">CANTIDAD:</label>
-            <input type="number" id="quantity" min="1">
-            <button class="add-button">AGREGAR</button>
+            <form method="get" action="{% url 'pedido' %}">
+                <label for="product">PRODUCTO:</label>
+                <input type="text" id="product" name="product" placeholder="Buscar producto...">
+                <button type="submit" class="add-button">BUSCAR</button>
+            </form>
         </div>
+        
         <div class="actions">
             <button class="egreso-ingreso">EGRESO/INGRESO</button>
             <button class="confirm-button">CONFIRMAR</button>
         </div>
     </div>
+
+    <script>
+        // JavaScript para calcular el total de productos seleccionados
+        document.addEventListener("DOMContentLoaded", function() {
+            const checkboxes = document.querySelectorAll('.product-select');
+            const totalField = document.getElementById('total');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', calculateTotal);
+            });
+
+            function calculateTotal() {
+                let total = 0;
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        const row = checkbox.closest('tr');
+                        const price = parseFloat(row.cells[3].textContent);
+                        total += price;
+                    }
+                });
+                totalField.value = total.toFixed(2);
+            }
+        });
+    </script>
 </body>
 </html>

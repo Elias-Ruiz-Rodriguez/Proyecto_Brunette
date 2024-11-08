@@ -1,0 +1,104 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #3B0144;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    width: 500px;
+    background-color: #3B0144;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.user {
+    color: white;
+}
+
+.date-time {
+    display: flex;
+    gap: 10px;
+}
+
+.date, .time {
+    background-color: #1D1D1D;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #C1FF72;
+}
+
+.main {
+    background-color: #AA4CA6;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.main h2 {
+    margin: 0;
+    color: #fff;
+    font-weight: bold;
+}
+
+.main input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    margin-top: 20px;
+    font-size: 1em;
+    background-color: #1D1D1D;
+    color: #fff;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.cancel {
+    background-color: #5C2754;
+    color: white;
+}
+
+.open {
+    background-color: #F49FD5;
+    color: white;
+}
+
+.back {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: #AA4CA6;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}

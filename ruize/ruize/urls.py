@@ -18,12 +18,14 @@ from django.contrib import admin
 from django.urls import path
 from login import views as login_views  # Importamos las vistas de login
 from ventas import views as ventas_views  # Importamos las vistas de ventas
-
+from caja import views as caja_views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('inicio_sesion/', login_views.inicio_sesion, name='inicio_sesion'),
     path('menu/', login_views.mostrar_menu, name='mostrar_menu'),
-    path('pedido/', ventas_views.pedido_view, name='pedido'),
+    path('pedido/', ventas_views.pedido, name='pedido'),
+    path('caja/apertura', caja_views.apertura_caja, name='apertura'),
+    path('caja/cierre', caja_views.cierre_caja, name='ciere')
 ]

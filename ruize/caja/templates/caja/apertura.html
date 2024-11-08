@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apertura de Caja</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'caja/apertura_caja.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="user">CAJERO: RUIZ</span>
+            <div class="date-time">
+                <span class="date">27/09/2024</span>
+                <span class="time">09:15:36</span>
+            </div>
+        </div>
+
+        <div class="main">
+            <h2>APERTURA DE CAJA</h2>
+            <input type="text" placeholder="MONTO DE APERTURA">
+            <div class="buttons">
+                <button class="cancel">CANCELAR</button>
+                <button class="open">ABRIR CAJA</button>
+            </div>
+        </div>
+
+        <button class="back">VOLVER</button>
+    </div>
+</body>
+</html>
