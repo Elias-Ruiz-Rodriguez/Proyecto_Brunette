@@ -6,3 +6,20 @@
 Migrar:
  python manage.py makemigrations
  python manage.py migrate
+
+
+Como usar git
+git branch => consulta de las branch
+git checkout -b "nombre" => para crear un nuevo branch
+git checkout => cambiarse de branch remota
+git fetch --all => Actualizar las branch remotas
+git branch -a => verificar las ramas remotas
+
+
+git add . => para agregar todo lo que agregaste 
+git commit "que cambios tuvo"
+git push origin "nombre del branch"
+
+
+git pull origin "nombre del branch" => Actualizar la rama local con los ultimos cambios
+
