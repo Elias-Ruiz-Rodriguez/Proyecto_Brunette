@@ -29,14 +29,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for producto in productos %}
-                    <tr>
-                        <td><input type="checkbox" class="product-select"></td>
-                        <td>{{ producto.stock_actual_prod }}</td>
-                        <td>{{ producto.nombre_prod }}</td>
-                        <td>{{ producto.precio_prod }}</td>
-                    </tr>
-                    {% endfor %}
+                    {% if productos %}
+                        {% for producto in productos %}
+                        <tr>
+                            <td><input type="checkbox" class="product-select"></td>
+                            <td>{{ producto.stock_actual_prod }}</td>
+                            <td>{{ producto.nombre_prod }}</td>
+                            <td>{{ producto.precio_prod }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" style="text-align:center;">No hay productos disponibles</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
             <div class="total">
@@ -44,6 +50,7 @@
                 <input type="text" id="total" disabled>
             </div>
             <button class="cancel-button">CANCELAR</button>
+            <button class="confirm-button">CONFIRMAR</button>
         </div>
         
         <div class="product-input-section">
@@ -55,8 +62,13 @@
         </div>
         
         <div class="actions">
+            <a href="\registro">
+                <button class="add-product-button">AGREGAR PRODUCTO</button>
+            </a>
             <button class="egreso-ingreso">EGRESO/INGRESO</button>
-            <button class="confirm-button">CONFIRMAR</button>
+            
+            <!-- Nuevo botón para agregar un producto -->
+            
         </div>
     </div>
 

@@ -24,13 +24,13 @@
                 {% csrf_token %}
                 <input type="text" name="monto_apertura" placeholder="MONTO DE APERTURA" required>
                 <div class="buttons">
-                    <button class="cancel">CANCELAR</button>
+                    <button class="cancel" type="button">CANCELAR</button>
                     <button class="open" type="submit">ABRIR CAJA</button>
                 </div>
             </form>
         </div>
 
-        <button class="back">VOLVER</button>
+        <a href="\menu" class="back">VOLVER</a>
     </div>
 
     <script>

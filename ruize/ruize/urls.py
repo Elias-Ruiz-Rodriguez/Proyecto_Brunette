@@ -30,4 +30,6 @@ urlpatterns = [
     path('caja/', include('caja.urls', namespace='caja')),
     path('caja/apertura', caja_views.apertura_caja, name='apertura'),
     path('caja/cierre', caja_views.cierre_caja, name='ciere'),
+    path('login/', include('login.urls', namespace='login')),
+    path('registro/', ventas_views.registrar_producto, name='registro'),
 ]

@@ -84,6 +84,20 @@ body {
     border-radius: 5px;
 }
 
+.add-product-button {
+    background-color: #e691e7; /* Color similar al de los otros botones */
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    color: white;
+}
+
+.add-product-button:hover {
+    background-color: #d68fdd; /* Color ligeramente más oscuro al hacer hover */
+}
+
 .actions {
     display: flex;
     justify-content: space-between;

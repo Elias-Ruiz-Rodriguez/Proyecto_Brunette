@@ -16,7 +16,7 @@ def apertura_caja(request):
                 fecha_apertura=timezone.now(),
                 usuario_apertura=request.user  # Se asigna el usuario que está abriendo la caja
             )
-            return redirect('caja:cierre_caja', caja_id=caja.id)
+            return redirect('login:menu')
     
     # Obtenemos la fecha actual para mostrarla en el template
     current_date = datetime.now().strftime('%d/%m/%Y')
