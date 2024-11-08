@@ -10,23 +10,33 @@
 <body>
     <div class="container">
         <div class="header">
-            <span class="user">CAJERO: RUIZ</span>
+            <span class="user">CAJERO: {{ user.username }}</span>
             <div class="date-time">
-                <span class="date">27/09/2024</span>
-                <span class="time">09:15:36</span>
+                <span class="date">{{ current_date }}</span>
+                <span class="time" id="current-time"></span>
             </div>
         </div>
 
         <div class="main">
             <h2>APERTURA DE CAJA</h2>
-            <input type="text" placeholder="MONTO DE APERTURA">
-            <div class="buttons">
-                <button class="cancel">CANCELAR</button>
-                <button class="open">ABRIR CAJA</button>
-            </div>
+            <p><strong>Número de Caja:</strong> {{ caja.numero_caja }}</p>
+            <form method="post" action="{% url 'caja:apertura_caja' %}">
+                {% csrf_token %}
+                <input type="text" name="monto_apertura" placeholder="MONTO DE APERTURA" required>
+                <div class="buttons">
+                    <button class="cancel">CANCELAR</button>
+                    <button class="open" type="submit">ABRIR CAJA</button>
+                </div>
+            </form>
         </div>
 
         <button class="back">VOLVER</button>
     </div>
+
+    <script>
+        setInterval(function() {
+            document.getElementById("current-time").innerHTML = new Date().toLocaleTimeString();
+        }, 1000);
+    </script>
 </body>
 </html>
