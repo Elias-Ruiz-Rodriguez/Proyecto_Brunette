@@ -17,6 +17,7 @@ class Empleados(models.Model):
 
     def __str__(self):
         return f"{self.nombre_empl} {self.apellido_empl}"
+        
 
 class Login(models.Model):
     id_login = models.BigAutoField(primary_key=True)

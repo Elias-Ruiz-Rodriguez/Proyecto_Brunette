@@ -26,8 +26,10 @@ urlpatterns = [
     path('inicio_sesion/', login_views.inicio_sesion, name='inicio_sesion'),
     path('menu/', login_views.mostrar_menu, name='mostrar_menu'),
     path('registrar/', login_views.registrar_usuario, name='registrar_usuario'),
+    path('registro/', login_views.verificar_datos, name='verificar_datos'),
     path('pedido/', ventas_views.pedido, name='pedido'),
     path('caja/', include('caja.urls', namespace='caja')),
-    path('caja/apertura', caja_views.apertura_caja, name='apertura'),
+    path('caja/apertura', caja_views.apertura_caja, name='apertura_caja'),
     path('caja/cierre', caja_views.cierre_caja, name='ciere'),
+    
 ]

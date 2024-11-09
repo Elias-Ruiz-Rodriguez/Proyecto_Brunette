@@ -69,3 +69,18 @@ def registrar_usuario(request):
             messages.error(request, "Error al registrar usuario. Revisa los datos ingresados.")
     
     return render(request, 'registrar/registrar.html')
+
+def verificar_datos(request):
+    # Obtenemos todos los empleados
+    empleados = Empleados.objects.all()
+    
+    # Imprime los empleados para verificar que se obtienen correctamente
+    for empleado in empleados:
+        print("Empleado:", empleado.nombre_empl, empleado.apellido_empl)
+        
+        # Obtenemos el login asociado a cada empleado
+        logins = Login.objects.filter(dni_empl=empleado.dni_empl)
+        for login in logins:
+            print("Login:", login.usuario, login.contraseña)
+            
+    return render(request, 'registro/registro.html', {'empleados': empleados, 'logins': logins})

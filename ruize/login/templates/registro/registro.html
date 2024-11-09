@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifique los datos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Registro los datos</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Usuario</th>
+                    <th>Contraseña</th>
+                    <th>Rol</th>
+                    <th>Email</th>
+                    <th>Domicilio</th>
+                    <th>Teléfono</th>
+                    <th>Fecha Nacimiento</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for empleado in empleados %}
+                    {% with login=empleado.login_set.first %}
+                    <tr>
+                        <td>{{ empleado.nombre_empl }}</td>
+                        <td>{{ empleado.apellido_empl }}</td>
+                        <td>{{ login.usuario }}</td>
+                        <td>{{ login.contraseña }}</td>
+                        <td>{{ empleado.get_rol_empl_display }}</td>
+                        <td>{{ empleado.correo_empl }}</td>
+                        <td>{{ empleado.domicilio_empl }}</td>
+                        <td>{{ empleado.telefono_empl }}</td>
+                        <td>{{ empleado.fecha_nacimiento_emp }}</td>
+                    </tr>
+                    {% endwith %}
+                {% endfor %}
+            </tbody>
+
+        </table>
+                <!-- Botones debajo de la tabla -->
+                <div class="d-flex justify-content-between mt-4">
+                    <!-- Botones Modificar, Eliminar, Limpiar a la izquierda -->
+                    <div>
+                        <button type="button" class="btn btn-primary mr-2">Modificar</button>
+                        <button type="button" class="btn btn-danger mr-2">Eliminar</button>
+                        <button type="button" class="btn btn-secondary">Limpiar</button>
+                    </div>
+        
+                    <!-- Botón Salir a la derecha -->
+                    <div>
+                        <button type="button" class="btn btn-warning">Salir</button>
+                    </div>
+                </div>
+    </div>
+</body>
+</html>
