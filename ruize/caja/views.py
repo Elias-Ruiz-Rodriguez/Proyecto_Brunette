@@ -2,28 +2,37 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from .models import Caja
 from datetime import datetime
-from django.shortcuts import render, redirect
-from .models import Caja
 from django.contrib.auth.models import User
 
 def apertura_caja(request):
     if request.method == 'POST':
+        numero_caja = request.POST.get('numero_caja')
         monto_apertura = request.POST.get('monto_apertura')
-        if monto_apertura:
-            caja = Caja.objects.create(
-                monto_apertura=monto_apertura,
-                monto_actual=monto_apertura,
-                fecha_apertura=timezone.now(),
-                usuario_apertura=request.user  # Se asigna el usuario que está abriendo la caja
-            )
-            return redirect('login:menu')
+        
+        if numero_caja and monto_apertura:
+            caja = Caja.objects.get(numero_caja=numero_caja)
+            caja.monto_apertura = monto_apertura
+            caja.monto_actual = monto_apertura
+            caja.fecha_apertura = timezone.now()
+            caja.usuario_apertura = request.user
+            caja.abierto = True
+            caja.save()
+            
+            return redirect('login:menu')  # Redirigir al menú principal
     
-    # Obtenemos la fecha actual para mostrarla en el template
+    # Obtener el listado de números de caja que están disponibles para abrir (donde `abierto=False`)
+    cajas_disponibles = Caja.objects.filter(abierto=False).values_list('numero_caja', flat=True)
+    
+    # Generar cajas si no existen (esto solo ocurre la primera vez)
+    if not Caja.objects.exists():
+        for i in range(1, 11):
+            Caja.objects.create(numero_caja=i, abierto=False)
+
+    # Pasar la fecha actual y las cajas disponibles al template
     current_date = datetime.now().strftime('%d/%m/%Y')
-    caja = Caja.objects.filter(fecha_cierre__isnull=True).last()  # Obtener la última caja abierta
     context = {
         'current_date': current_date,
-        'caja': caja  # Pasamos la última caja para mostrar el número de caja
+        'cajas_disponibles': cajas_disponibles,
     }
     return render(request, 'caja/apertura.html', context)
 

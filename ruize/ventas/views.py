@@ -22,4 +22,3 @@ def pedido(request):
     else:
         productos = Producto.objects.all()
     return render(request, 'pedido/pedido.html', {'productos': productos})
-
