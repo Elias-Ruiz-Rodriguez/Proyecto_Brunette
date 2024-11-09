@@ -46,6 +46,19 @@ body {
     margin-top: 20px;
     border-radius: 10px;
 }
+.back {
+    position: absolute;
+    bottom: 10px;
+    right: 10px; /* Cambiado de 'left' a 'right' */
+    background-color: #AA4CA6;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none; /* Para evitar subrayado */
+}
 
 .main h2 {
     margin: 0;

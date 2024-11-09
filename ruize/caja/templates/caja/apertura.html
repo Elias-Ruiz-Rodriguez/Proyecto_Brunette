@@ -19,18 +19,26 @@
 
         <div class="main">
             <h2>APERTURA DE CAJA</h2>
-            <p><strong>Número de Caja:</strong> {{ caja.numero_caja }}</p>
             <form method="post" action="{% url 'caja:apertura_caja' %}">
                 {% csrf_token %}
+
+                <label for="numero_caja"><strong>Número de Caja:</strong></label>
+                <select name="numero_caja" id="numero_caja" required>
+                    {% for numero in cajas_disponibles %}
+                        <option value="{{ numero }}">Caja {{ numero }}</option>
+                    {% endfor %}
+                </select>
+
                 <input type="text" name="monto_apertura" placeholder="MONTO DE APERTURA" required>
+
                 <div class="buttons">
-                    <button class="cancel">CANCELAR</button>
+                    <button class="cancel" type="button" onclick="window.location.href='{% url 'login:menu' %}'">CANCELAR</button>
                     <button class="open" type="submit">ABRIR CAJA</button>
                 </div>
             </form>
         </div>
 
-        <button class="back">VOLVER</button>
+        <a href="{% url 'login:menu' %}" class="back">VOLVER</a>
     </div>
 
     <script>

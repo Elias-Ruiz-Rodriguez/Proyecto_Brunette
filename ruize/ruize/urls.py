@@ -29,7 +29,14 @@ urlpatterns = [
     path('registro/', login_views.verificar_datos, name='verificar_datos'),
     path('pedido/', ventas_views.pedido, name='pedido'),
     path('caja/', include('caja.urls', namespace='caja')),
+<<<<<<< HEAD
     path('caja/apertura', caja_views.apertura_caja, name='apertura_caja'),
     path('caja/cierre', caja_views.cierre_caja, name='ciere'),
     
+=======
+    path('caja/apertura', caja_views.apertura_caja, name='apertura'),
+    path('caja/cierre', caja_views.cierre_caja, name='cierre'),
+    path('login/', include('login.urls', namespace='login')),
+    path('registro/', ventas_views.registrar_producto, name='registro'),
+>>>>>>> 20fbaa669607067fe8ef7bffd7bcf365e22b48a0
 ]
