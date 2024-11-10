@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'producto/producto.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h3>Cajero: Ruiz</h3>
+            <div class="time-date">
+                <span class="time">09:15:36</span>
+                <span class="date">27/09/2024</span>
+            </div>
+        </div>
+        
+        <div class="pedido-section">
+            <h2>PRODUCTO</h2>
+            <table class="pedido-table">
+                <thead>
+                    <tr>
+                        <th>SELECCIONAR</th>
+                        <th>CANTIDAD</th>
+                        <th>PRODUCTO</th>
+                        <th>PRECIO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if productos %}
+                        {% for producto in productos %}
+                        <tr>
+                            <td><input type="checkbox" class="product-select"></td>
+                            <td>{{ producto.stock_actual_prod }}</td>
+                            <td>{{ producto.nombre_prod }}</td>
+                            <td>{{ producto.precio_prod }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" style="text-align:center;">No hay productos disponibles</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+            <div class="total">
+                <span>TOTAL</span>
+                <input type="text" id="total" disabled>
+            </div>
+            <button class="cancel-button">CANCELAR</button>
+            <button class="confirm-button">CONFIRMAR</button>
+        </div>
+        
+        <div class="product-input-section">
+            <form method="get" action="{% url 'producto' %}">
+                <label for="product">PRODUCTO:</label>
+                <input type="text" id="product" name="product" placeholder="Buscar producto...">
+                <button type="submit" class="add-button">BUSCAR</button>
+            </form>
+        </div>
+        
+        <div class="actions">
+            <a href="\registro_producto">
+                <button class="add-product-button">AGREGAR PRODUCTO</button>
+            </a>
+            <button class="egreso-ingreso">EGRESO/INGRESO</button>
+            
+            <!-- Nuevo botón para agregar un producto -->
+            
+        </div>
+    </div>
+
+    <script>
+        // JavaScript para calcular el total de productos seleccionados
+        document.addEventListener("DOMContentLoaded", function() {
+            const checkboxes = document.querySelectorAll('.product-select');
+            const totalField = document.getElementById('total');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', calculateTotal);
+            });
+
+            function calculateTotal() {
+                let total = 0;
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        const row = checkbox.closest('tr');
+                        const price = parseFloat(row.cells[3].textContent);
+                        total += price;
+                    }
+                });
+                totalField.value = total.toFixed(2);
+            }
+        });
+    </script>
+</body>
+</html>

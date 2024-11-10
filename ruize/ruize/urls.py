@@ -27,16 +27,11 @@ urlpatterns = [
     path('menu/', login_views.mostrar_menu, name='mostrar_menu'),
     path('registrar/', login_views.registrar_usuario, name='registrar_usuario'),
     path('registro/', login_views.verificar_datos, name='verificar_datos'),
-    path('pedido/', ventas_views.pedido, name='pedido'),
+    path('producto/', ventas_views.producto, name='producto'),
+    path('pedido/', ventas_views.crear_pedido, name='crear_pedido'),
     path('caja/', include('caja.urls', namespace='caja')),
-<<<<<<< HEAD
     path('caja/apertura', caja_views.apertura_caja, name='apertura_caja'),
     path('caja/cierre', caja_views.cierre_caja, name='ciere'),
-    
-=======
-    path('caja/apertura', caja_views.apertura_caja, name='apertura'),
-    path('caja/cierre', caja_views.cierre_caja, name='cierre'),
     path('login/', include('login.urls', namespace='login')),
-    path('registro/', ventas_views.registrar_producto, name='registro'),
->>>>>>> 20fbaa669607067fe8ef7bffd7bcf365e22b48a0
+    path('registro_producto/', ventas_views.registrar_producto, name='registro_producto'),
 ]
