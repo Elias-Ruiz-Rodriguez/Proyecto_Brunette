@@ -33,6 +33,11 @@ urlpatterns = [
     path('caja/', include('caja.urls', namespace='caja')),
     path('caja/apertura', caja_views.apertura_caja, name='apertura_caja'),
     path('caja/cierre', caja_views.cierre_caja, name='ciere'),
+    
+    path('caja/apertura', caja_views.apertura_caja, name='apertura'),
+    path('caja/cierre', caja_views.cierre_caja, name='cierre'),
+    path('login/', include('login.urls', namespace='login')),
+    path('registro_prod/', ventas_views.registrar_producto, name='registro'),
     path('login/', include('login.urls', namespace='login')),
     path('registro_producto/', ventas_views.registrar_producto, name='registro_producto'),
 
