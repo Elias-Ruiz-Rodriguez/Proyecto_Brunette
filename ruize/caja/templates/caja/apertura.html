@@ -21,13 +21,10 @@
             <h2>APERTURA DE CAJA</h2>
             <form method="post" action="{% url 'caja:apertura_caja' %}">
                 {% csrf_token %}
-
+                
+                <!-- El número de caja ya no es editable -->
                 <label for="numero_caja"><strong>Número de Caja:</strong></label>
-                <select name="numero_caja" id="numero_caja" required>
-                    {% for numero in cajas_disponibles %}
-                        <option value="{{ numero }}">Caja {{ numero }}</option>
-                    {% endfor %}
-                </select>
+                <input type="text" name="numero_caja" value="{{ caja.numero_caja }}" readonly>
 
                 <input type="text" name="monto_apertura" placeholder="MONTO DE APERTURA" required>
 
