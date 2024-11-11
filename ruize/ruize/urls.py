@@ -28,10 +28,12 @@ urlpatterns = [
     path('registrar/', login_views.registrar_usuario, name='registrar_usuario'),
     path('registro/', login_views.verificar_datos, name='verificar_datos'),
     path('producto/', ventas_views.producto, name='producto'),
-    path('pedido/', ventas_views.crear_pedido, name='crear_pedido'),
+    path('pedido/', ventas_views.crear_pedido, name='pedido'),
+    path('confirmar-pedido/', ventas_views.confirmar_pedido, name='confirmar_pedido'),
     path('caja/', include('caja.urls', namespace='caja')),
     path('caja/apertura', caja_views.apertura_caja, name='apertura_caja'),
     path('caja/cierre', caja_views.cierre_caja, name='ciere'),
     path('login/', include('login.urls', namespace='login')),
     path('registro_producto/', ventas_views.registrar_producto, name='registro_producto'),
+
 ]
