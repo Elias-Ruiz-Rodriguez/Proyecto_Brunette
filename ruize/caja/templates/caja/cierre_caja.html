@@ -10,18 +10,18 @@
 <body>
 
     <header class="header">
-        <span class="user-info">CAJERO: RUIZ</span>
+        <span class="user-info">CAJERO: {{ user.username }}</span>
     </header>
 
     <div class="container">
         <div class="date-time">
-            <span id="hora">09:15:36</span>
-            <span id="fecha">27/09/2024</span>
+            <span id="hora">{{ current_time }}</span>
+            <span id="fecha">{{ current_date }}</span>
         </div>
 
         <div class="info">
             <label for="monto-efectivo">MONTO EFECTIVO EN CAJA</label>
-            <input type="text" id="monto-efectivo" value="0.00" readonly>
+            <input type="text" id="monto-efectivo" value="{{ caja.monto_actual }}" readonly>
 
             <label for="monto-tarjeta">MONTO DINERO EN TARJETA</label>
             <input type="text" id="monto-tarjeta" value="0.00" readonly>
@@ -31,8 +31,11 @@
         </div>
 
         <div class="buttons">
-            <button class="cancel-button">CANCELAR</button>
-            <button class="submit-button">CERRAR CAJA</button>
+            <form method="POST">
+                {% csrf_token %}
+                <button class="cancel-button" type="button" onclick="window.location.href='{% url 'login:menu' %}'">CANCELAR</button>
+                <button class="submit-button" type="submit">CERRAR CAJA</button>
+            </form>
         </div>
     </div>
 

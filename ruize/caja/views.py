@@ -3,55 +3,43 @@ from django.utils import timezone
 from .models import Caja
 from datetime import datetime
 from django.contrib.auth.models import User
+from decimal import Decimal
+from django.contrib import messages
 
 def apertura_caja(request):
+    # Asegurar que existe una instancia de Caja con el número de caja "001"
+    caja, created = Caja.objects.get_or_create(numero_caja="001")
+    
     if request.method == 'POST':
-        numero_caja = request.POST.get('numero_caja')
         monto_apertura = request.POST.get('monto_apertura')
-        
-        if numero_caja and monto_apertura:
-            caja = Caja.objects.get(numero_caja=numero_caja)
-            caja.monto_apertura = monto_apertura
-            caja.monto_actual = monto_apertura
-            caja.fecha_apertura = timezone.now()
-            caja.usuario_apertura = request.user
-            caja.abierto = True
-            caja.save()
-            
-            return redirect('login:menu')  # Redirigir al menú principal
-    
-    # Obtener el listado de números de caja que están disponibles para abrir (donde `abierto=False`)
-    cajas_disponibles = Caja.objects.filter(abierto=False).values_list('numero_caja', flat=True)
-    
-    # Generar cajas si no existen (esto solo ocurre la primera vez)
-    if not Caja.objects.exists():
-        for i in range(1, 11):
-            Caja.objects.create(numero_caja=i, abierto=False)
+        if monto_apertura:
+            caja.abrir(monto=Decimal(monto_apertura), usuario=request.user)
+            messages.success(request, f"Caja {caja.numero_caja} abierta correctamente.")
+            # Redirigir al menú pasando el id de la caja (en lugar del numero_caja)
+            return redirect('login:menu')  # Se redirige a la página del menú
 
-    # Pasar la fecha actual y las cajas disponibles al template
-    current_date = datetime.now().strftime('%d/%m/%Y')
-    context = {
-        'current_date': current_date,
-        'cajas_disponibles': cajas_disponibles,
-    }
-    return render(request, 'caja/apertura.html', context)
+    current_date = timezone.now().strftime('%d/%m/%Y')
+    return render(request, 'caja/apertura.html', {'current_date': current_date, 'caja': caja})
 
 def cierre_caja(request, caja_id):
-    # Obtener la instancia de Caja específica
     caja = get_object_or_404(Caja, id=caja_id)
-    
-    if request.method == 'POST':
-        # Si el formulario tiene un monto de dinero ingresado
-        monto_ingresado = request.POST.get('ingreso_dinero')
-        if monto_ingresado:
-            caja.monto_actual += float(monto_ingresado)  # Actualizar el monto actual
-            caja.save()
 
-        # Al cerrar la caja, capturar la fecha y hora de cierre actual
-        if 'cerrar_caja' in request.POST:
-            caja.fecha_cierre = timezone.now()  # Guardar fecha y hora de cierre actual
-            caja.monto_cierre = caja.monto_actual  # Registrar el monto actual como cierre
-            caja.save()
-            return redirect('home')  # Redirigir a una página de inicio o a donde desees
-    
+    if request.method == "POST":
+        # Obtenemos los montos del formulario
+        monto_efectivo_real = Decimal(request.POST.get('monto_efectivo_real', 0.00))
+        monto_tarjeta_real = Decimal(request.POST.get('monto_tarjeta_real', 0.00))
+        monto_ingreso = Decimal(request.POST.get('ingreso_dinero', 0.00))
+
+        # Calculamos el monto final de la caja, que es el monto actual + lo ingresado
+        monto_final = caja.monto_actual + monto_ingreso
+
+        # Procedemos a cerrar la caja
+        caja.cerrar(monto_final, monto_efectivo_real, monto_tarjeta_real)
+
+        # Enviamos un mensaje de éxito
+        messages.success(request, "Caja cerrada correctamente.")
+
+        # Redirigimos a alguna página (por ejemplo, al menú de inicio)
+        return redirect('login:menu')
+
     return render(request, 'caja/cierre_caja.html', {'caja': caja})
