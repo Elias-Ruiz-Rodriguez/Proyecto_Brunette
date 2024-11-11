@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Botones Centrados</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'menu/menu.css' %}">
+    <link rel="stylesheet" href="/static/menu/menu.css">
+
 </head>
 <body>
     <div class="time-date-container">
@@ -14,8 +15,8 @@
     </div>
     
     <div class="button-container">
-        <a href="{% url 'apertura_caja' %}">
-        <button class="button">APERTURA DE CAJA</button>
+        <a href="{% url 'pedido' %}">
+        <button class="button">PEDIDO</button>
     </a>
         <a href="{% url 'registrar_usuario' %}">
             <button class="button">REGISTRAR USUARIO</button>
