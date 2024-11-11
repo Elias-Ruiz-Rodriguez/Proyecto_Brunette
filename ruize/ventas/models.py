@@ -17,7 +17,7 @@ class Pedido(models.Model):
     id_pedido = models.AutoField(primary_key=True)
     id_emple = models.IntegerField()  # Cambiar a ForeignKey si tienes un modelo Empleado
     id_caja = models.IntegerField()   # Cambiar a ForeignKey si tienes un modelo Caja
-    id_veta = models.IntegerField()   # Cambiar a ForeignKey si tienes un modelo Venta
+    id_venta = models.IntegerField()   # Cambiar a ForeignKey si tienes un modelo Venta
     generado_ped = models.BooleanField(default=False)
     fecha_gene_ped = models.DateField(null=True, blank=True)
     hora_gen_ped = models.TimeField(null=True, blank=True)

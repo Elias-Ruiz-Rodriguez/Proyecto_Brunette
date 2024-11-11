@@ -12,10 +12,9 @@ def inicio_sesion(request):
         
         try:
             user = Login.objects.get(usuario=usuario)
-            if user.contraseña == contraseña:  # Comparación directa sin cifrado
-                # Autenticación exitosa
+            if user.contraseña == contraseña: 
                 messages.success(request, "Inicio de sesión exitoso")
-                return redirect('mostrar_menu')  # Cambia 'apertura_de_caja' por la ruta que desees
+                return redirect('mostrar_menu') 
             else:
                 messages.error(request, "Contraseña incorrecta")
         except Login.DoesNotExist:
@@ -71,16 +70,13 @@ def registrar_usuario(request):
     return render(request, 'registrar/registrar.html')
 
 def verificar_datos(request):
-    # Obtenemos todos los empleados
     empleados = Empleados.objects.all()
     
-    # Imprime los empleados para verificar que se obtienen correctamente
     for empleado in empleados:
         print("Empleado:", empleado.nombre_empl, empleado.apellido_empl)
         
-        # Obtenemos el login asociado a cada empleado
         logins = Login.objects.filter(dni_empl=empleado.dni_empl)
         for login in logins:
             print("Login:", login.usuario, login.contraseña)
             
-    return render(request, 'registro/registro.html', {'empleados': empleados, 'logins': logins})
+    return render(request, 'registro/registro_usuario.html', {'empleados': empleados, 'logins': logins})
