@@ -14,13 +14,16 @@ def inicio_sesion(request):
             user = Login.objects.get(usuario=usuario)
             if user.contraseña == contraseña: 
                 messages.success(request, "Inicio de sesión exitoso")
-                return redirect('mostrar_menu') 
+                return redirect('apertura_caja') 
             else:
                 messages.error(request, "Contraseña incorrecta")
         except Login.DoesNotExist:
             messages.error(request, "Usuario no encontrado")
     
     return render(request, 'inicio_sesion/inicio_sesion.html')
+
+def mostrar_caja(request):
+    return render(request, 'caja/apertura.html')
 
 def mostrar_menu(request):
     return render(request, 'menu/menu.html')
