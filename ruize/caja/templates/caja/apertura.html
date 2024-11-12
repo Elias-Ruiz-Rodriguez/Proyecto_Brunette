@@ -19,22 +19,29 @@
 
         <div class="main">
             <h2>APERTURA DE CAJA</h2>
-            <form method="post" action="{% url 'caja:apertura_caja' %}">
-                {% csrf_token %}
-                
-                <!-- El número de caja ya no es editable -->
-                <label for="numero_caja"><strong>Número de Caja:</strong></label>
-                <input type="text" name="numero_caja" value="{{ caja.numero_caja }}" readonly>
-
-                <input type="text" name="monto_apertura" placeholder="MONTO DE APERTURA" required>
-
-                <div class="buttons">
-                    <button class="cancel" type="button" onclick="window.location.href='{% url 'login:menu' %}'">CANCELAR</button>
-                    <button class="open" type="submit">ABRIR CAJA</button>
+            
+            {% if caja.abierto %}
+                <div class="alert alert-warning">
+                    <strong>Caja ya abierta:</strong> No es posible abrirla nuevamente.
                 </div>
-            </form>
-        </div>
+            {% else %}
+                <form method="post" action="{% url 'caja:apertura_caja' %}">
+                    {% csrf_token %}
+                    
+                    <label for="numero_caja"><strong>Número de Caja:</strong></label>
+                    <input type="text" name="numero_caja" value="{{ caja.numero_caja }}" readonly>
 
+                    <input type="text" name="monto_apertura" placeholder="MONTO DE APERTURA" required>
+
+                    <div class="buttons">
+                        <button class="cancel" type="button" onclick="window.location.href='{% url 'login:menu' %}'">CANCELAR</button>
+                        <button class="open" type="submit">ABRIR CAJA</button>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    <div>
         <a href="{% url 'login:menu' %}" class="back">VOLVER</a>
     </div>
 

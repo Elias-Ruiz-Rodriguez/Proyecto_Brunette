@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect,JsonResponse
 from django.contrib import messages
 from django.utils import timezone
@@ -20,6 +20,29 @@ def registrar_producto(request):
         form = ProductoForm()
 
     return render(request, 'registrar/registro_producto.html', {'form': form})
+
+def editar_producto(request):
+    if request.method == 'POST':
+        producto_id = request.POST.get('producto_id')
+        producto = get_object_or_404(Producto, id_prod=producto_id)
+
+        # Obtener los nuevos valores del formulario
+        nuevo_precio = request.POST.get('precio_prod')
+        nueva_cantidad = request.POST.get('stock_prod')
+
+        # Validar y actualizar
+        if nuevo_precio and nueva_cantidad:
+            producto.precio_prod = Decimal(nuevo_precio)
+            producto.stock_actual_prod = int(nueva_cantidad)
+            producto.save()
+
+            messages.success(request, 'Producto actualizado correctamente.')
+        else:
+            messages.error(request, 'Por favor ingresa datos válidos.')
+
+        return redirect('producto')  # Redirige a la página de productos
+
+    return redirect('producto')  # Redirige a la página de productos si el método no es POST
 
 def crear_pedido(request):
     productos = Producto.objects.all()
