@@ -13,6 +13,7 @@ urlpatterns = [
     path('registrar/', login_views.registrar_usuario, name='registrar_usuario'),
     path('registro/', login_views.verificar_datos, name='verificar_datos'),
     path('producto/', ventas_views.producto, name='producto'),
+    path('producto/', include('ventas.urls')),
     path('pedido/', ventas_views.crear_pedido, name='pedido'),
     path('confirmar-pedido/', ventas_views.confirmar_pedido, name='confirmar_pedido'),
     path('caja/', include('caja.urls', namespace='caja')),
