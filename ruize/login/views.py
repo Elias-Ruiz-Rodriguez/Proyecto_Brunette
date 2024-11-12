@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Login
-from .models import Empleados
+from .models import Login, Empleados
 from django.utils import timezone
 
 
