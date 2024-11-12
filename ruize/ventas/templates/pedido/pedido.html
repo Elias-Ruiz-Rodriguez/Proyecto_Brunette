@@ -6,8 +6,30 @@
     <title>Crear Pedido</title>
     {% load static %}
     <style>
-                /* Estilos para la ventana emergente */
-                .modal {
+        /* Fondo de la página */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center; /* Alinea el contenido hacia arriba */
+            align-items: flex-start;    /* Alinea el contenido hacia el inicio vertical */
+            background-color: #f4f4f4; /* Color de fondo */
+        }
+
+        /* Contenedor principal */
+        .container {
+            width: 80%;
+            max-width: 1000px;
+            background-color: #f7ccf3;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px; /* Espacio arriba */
+        }
+
+        /* Estilos para la ventana emergente */
+        .modal {
             display: none;
             position: fixed;
             z-index: 1;
@@ -38,6 +60,7 @@
             text-decoration: none;
             cursor: pointer;
         }
+
         /* Estilos de la tabla */
         table {
             width: 100%;
@@ -45,50 +68,68 @@
             margin-top: 20px;
         }
         table, th, td {
-            border: 1px solid black;
+            border: 1px solid white;
         }
         th, td {
             padding: 8px;
             text-align: center;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #db5ac7;
         }
+
         /* Estilos del total */
         #totalPedido {
             font-weight: bold;
             text-align: right;
             padding: 10px;
-            background-color: #f2f2f2;
+            background-color: #f7ccf3;
             margin-top: 10px;
         }
-        /* Estilos para los botones */
+        
+
+        /* Botones */
         .botones {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start; /* Los elementos dentro del contenedor estarán alineados a la izquierda */
+            align-items: center;
             margin-top: 20px;
         }
+
+        /* Botón Cancelar a la izquierda */
+        .cancelar-btn {
+            margin-right: auto; /* Empuja el botón hacia la izquierda */
+        }
+
+        /* Contenedor de los otros botones (Egreso/Ingreso, Limpiar, Confirmar) */
+        .otros-botones {
+            display: flex;
+            justify-content: end;
+            gap: 10px; /* Espacio entre los botones */
+        }
+
+        /* Estilo de los botones */
         .boton {
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #db5ac7;
             color: white;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
+
         .boton:hover {
-            background-color: #45a049;
+            background-color: #be3ba6;
         }
-        .boton-cancelar {
-            background-color: #f44336;
-        }
-        .boton-cancelar:hover {
-            background-color: #e53935;
-        }
+
     </style>
 </head>
 <body>
+<div class="container">
     <!-- Botón para abrir la ventana emergente -->
-    <button id="agregarProductoBtn">Agregar Producto</button>
+    <div class="botones">
+    <button class="boton boton" id="agregarProductoBtn">Agregar Producto</button>
+    </div>
 
     <!-- La ventana emergente -->
     <div id="myModal" class="modal">
@@ -129,226 +170,9 @@
             </form>
         </div>
         
-        <div class="actions">
-            <a href="\registro_prod">
-                <button class="add-product-button">AGREGAR PRODUCTO</button>
-            </a>
-            <button class="egreso-ingreso">EGRESO/INGRESO</button>
-            
-            <!-- Nuevo botón para agregar un producto -->
-            
-        </div>
     </div>
 
-    <script>
-          var productosSeleccionados = [];  // Para almacenar los productos seleccionados
 
-        // Función para agregar productos seleccionados
-        document.getElementById("agregarAlaTabla").onclick = function() {
-            // Agregar el producto a la lista y a la tabla...
-            // (Este código ya lo tienes)
-        };
-
-        // Función para confirmar el pedido
-        function confirmarPedido() {
-            if (productosSeleccionados.length === 0) {
-                alert("No hay productos seleccionados.");
-                return;
-            }
-
-            // Enviar productos seleccionados a Django para guardar en la base de datos
-            fetch("{% url 'confirmar_pedido' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify({ productos: productosSeleccionados })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Pedido confirmado!\n" + data.pedido_resumen);
-                    window.location.href = "{% url 'pedido' %}";
-                } else {
-                    alert("Hubo un problema al guardar el pedido.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("Ocurrió un error.");
-            });
-        }
-
-        // Obtener el modal
-        var modal = document.getElementById("myModal");
-
-        // Obtener el botón que abre el modal
-        var btn = document.getElementById("agregarProductoBtn");
-
-        // Obtener el elemento <span> que cierra el modal
-        var span = document.getElementsByClassName("close")[0];
-
-        // Cuando el usuario hace clic en el botón, abre el modal
-        btn.onclick = function() {
-            modal.style.display = "block";
-        }
-
-        // Cuando el usuario hace clic en <span> (x), cierra el modal
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        // Cuando el usuario hace clic en cualquier parte fuera del modal, también lo cierra
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-        // Actualizar el stock y precio cuando se selecciona un producto
-        document.getElementById("producto").addEventListener("change", function() {
-            var productoSelect = this;
-            var selectedOption = productoSelect.options[productoSelect.selectedIndex];
-            
-            // Verificar que se ha seleccionado un producto (no vacío)
-            if (selectedOption.value) {
-                // Obtener el stock y precio del producto seleccionado
-                var stock = selectedOption.getAttribute('data-stock');
-                var precio = selectedOption.getAttribute('data-precio');
-
-                // Actualizar la visualización del stock y precio
-                document.getElementById("stock").textContent = "Stock: " + stock;
-                document.getElementById("precio").textContent = "Precio: $" + parseFloat(precio).toFixed(2);
-
-                // Deshabilitar la opción por defecto de "Seleccionar producto"
-                productoSelect.options[0].disabled = true; // Deshabilitar la opción por defecto
-            } else {
-                // Si no se ha seleccionado un producto, limpiar la visualización
-                document.getElementById("stock").textContent = "Stock: ";
-                document.getElementById("precio").textContent = "Precio: ";
-            }
-        });
-
-        // Variable para mantener el total acumulado
-        var totalGeneral = 0;
-        var productosSeleccionados = [];  // Para almacenar los productos y las cantidades seleccionadas
-
-        // Función para agregar el producto y cantidad a la tabla
-        document.getElementById("agregarAlaTabla").onclick = function() {
-            var productoSelect = document.getElementById("producto");
-            var cantidadInput = document.getElementById("cantidad");
-            var productoId = productoSelect.value;
-            var productoNombre = productoSelect.options[productoSelect.selectedIndex]?.text;
-            var productoPrecio = parseFloat(productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio'));
-            var stockActual = parseInt(productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-stock'));
-            var cantidad = parseInt(cantidadInput.value);
-
-            // Mostrar un mensaje de error si no se ha seleccionado un producto
-            if (!productoId) {
-                document.getElementById("error-message").style.display = "block"; // Mostrar el mensaje de error
-                return; // No continuar con el proceso de agregar a la tabla
-            } else {
-                document.getElementById("error-message").style.display = "none"; // Ocultar el mensaje de error
-            }
-
-            // Verificar si la cantidad solicitada es mayor que el stock disponible
-            if (cantidad && cantidad > 0) {
-                if (cantidad > stockActual) {
-                    alert("La cantidad solicitada excede el stock disponible.");
-                    return;
-                }
-
-                // Restar el stock del producto seleccionado
-                productoSelect.options[productoSelect.selectedIndex].setAttribute('data-stock', stockActual - cantidad);
-
-                // Agregar el producto al array de productos seleccionados
-                productosSeleccionados.push({
-                    id: productoId,
-                    nombre: productoNombre,
-                    cantidad: cantidad,
-                    precio: productoPrecio,
-                    stockRestado: stockActual - cantidad
-                });
-
-                // Crear una nueva fila en la tabla
-                var tabla = document.getElementById("tablaPedido");
-                var fila = tabla.insertRow();
-                
-                var celdaProducto = fila.insertCell(0);
-                var celdaCantidad = fila.insertCell(1);
-                var celdaPrecioUnitario = fila.insertCell(2);
-                var celdaPrecioTotal = fila.insertCell(3);
-
-                // Calcular el precio total
-                var precioTotal = productoPrecio * cantidad;
-
-                // Rellenar las celdas con la información del producto
-                celdaProducto.innerHTML = productoNombre;  // Solo el nombre del producto
-                celdaCantidad.innerHTML = cantidad;  // Cantidad
-                celdaPrecioUnitario.innerHTML = "$" + productoPrecio.toFixed(2);  // Precio unitario
-                celdaPrecioTotal.innerHTML = "$" + precioTotal.toFixed(2);  // Precio total (Precio * Cantidad)
-
-                // Sumar al total general
-                totalGeneral += precioTotal;
-
-                // Mostrar el total en la parte inferior
-                document.getElementById("totalPedido").innerHTML = "Total: $" + totalGeneral.toFixed(2);
-
-                // Limpiar los campos del formulario
-                cantidadInput.value = "";
-                productoSelect.selectedIndex = 0;  // Restaurar la opción predeterminada a blanco
-
-                // Limpiar la visualización del stock y precio
-                document.getElementById("stock").textContent = "Stock: ";
-                document.getElementById("precio").textContent = "Precio: ";
-
-                // Cerrar el modal
-                modal.style.display = "none";
-            } else {
-                alert("Por favor ingresa una cantidad válida.");
-            }
-        };
-
-        // Función para cancelar el pedido
-        function cancelarPedido() {
-            // Restaurar el stock a su valor original
-            productosSeleccionados.forEach(function(producto) {
-                var productoSelect = document.getElementById("producto");
-                var option = Array.from(productoSelect.options).find(option => option.value == producto.id);
-                
-                if (option) {
-                    var stockOriginal = parseInt(option.getAttribute('data-stock')) + producto.cantidad;
-                    option.setAttribute('data-stock', stockOriginal);
-                }
-            });
-
-            // Limpiar la tabla y el total
-            var tabla = document.getElementById("tablaPedido");
-            tabla.innerHTML = "<thead><tr><th>Producto</th><th>Cantidad</th><th>Precio Unitario</th><th>Precio Total</th></tr></thead><tbody></tbody>";
-            document.getElementById("totalPedido").innerHTML = "Total: $0.00";
-
-            // Limpiar los productos seleccionados
-            productosSeleccionados = [];
-
-            // Limpiar los campos del formulario
-            var productoSelect = document.getElementById("producto");
-            var cantidadInput = document.getElementById("cantidad");
-            productoSelect.selectedIndex = 0;  // Restaurar la opción predeterminada
-            cantidadInput.value = "";
-
-            // Limpiar la visualización del stock y precio
-            document.getElementById("stock").textContent = "Stock: ";
-            document.getElementById("precio").textContent = "Precio: ";
-
-            // Cerrar el modal si está abierto
-            modal.style.display = "none";
-        }
-
-
-
-        
-    </script>
 
     <!-- Tabla de productos seleccionados -->
     <table id="tablaPedido">
@@ -372,10 +196,223 @@
     </div>
 
     <!-- Botones de Cancelar -->
-    <div class="botones">
-        <button class="boton boton-confirmar" onclick="confirmarPedido()">Confirmar</button>
-        <button class="boton boton-cancelar" onclick="cancelarPedido()">Cancelar</button>
+    <div class="otros-botones">
+        <button class="boton boton" onclick="egresoIngreso()">Egreso/Ingreso</button>
+        <button class="boton boton" onclick="cancelarPedido()">Limpiar</button>
+        <button class="boton boton" onclick="confirmarPedido()">Confirmar</button>
     </div>
+    <div class="botones">
+        <a href="{% url 'mostrar_menu' %}">
+           <button class="boton boton cancelar-btn">Cancelar</button>
+        </a>
+       </div>
+</div>
+
+    <script>
+        var productosSeleccionados = [];  // Para almacenar los productos seleccionados
+
+      // Función para agregar productos seleccionados
+      document.getElementById("agregarAlaTabla").onclick = function() {
+          // Agregar el producto a la lista y a la tabla...
+          // (Este código ya lo tienes)
+      };
+
+      // Función para confirmar el pedido
+      function confirmarPedido() {
+          if (productosSeleccionados.length === 0) {
+              alert("No hay productos seleccionados.");
+              return;
+          }
+
+          // Enviar productos seleccionados a Django para guardar en la base de datos
+          fetch("{% url 'confirmar_pedido' %}", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": "{{ csrf_token }}"
+              },
+              body: JSON.stringify({ productos: productosSeleccionados })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert("Pedido confirmado!\n" + data.pedido_resumen);
+                  window.location.href = "{% url 'pedido' %}";
+              } else {
+                  alert("Hubo un problema al guardar el pedido.");
+              }
+          })
+          .catch(error => {
+              console.error("Error:", error);
+              alert("Ocurrió un error.");
+          });
+      }
+
+      // Obtener el modal
+      var modal = document.getElementById("myModal");
+
+      // Obtener el botón que abre el modal
+      var btn = document.getElementById("agregarProductoBtn");
+
+      // Obtener el elemento <span> que cierra el modal
+      var span = document.getElementsByClassName("close")[0];
+
+      // Cuando el usuario hace clic en el botón, abre el modal
+      btn.onclick = function() {
+          modal.style.display = "block";
+      }
+
+      // Cuando el usuario hace clic en <span> (x), cierra el modal
+      span.onclick = function() {
+          modal.style.display = "none";
+      }
+
+      // Cuando el usuario hace clic en cualquier parte fuera del modal, también lo cierra
+      window.onclick = function(event) {
+          if (event.target == modal) {
+              modal.style.display = "none";
+          }
+      }
+
+      // Actualizar el stock y precio cuando se selecciona un producto
+      document.getElementById("producto").addEventListener("change", function() {
+          var productoSelect = this;
+          var selectedOption = productoSelect.options[productoSelect.selectedIndex];
+          
+          // Verificar que se ha seleccionado un producto (no vacío)
+          if (selectedOption.value) {
+              // Obtener el stock y precio del producto seleccionado
+              var stock = selectedOption.getAttribute('data-stock');
+              var precio = selectedOption.getAttribute('data-precio');
+
+              // Actualizar la visualización del stock y precio
+              document.getElementById("stock").textContent = "Stock: " + stock;
+              document.getElementById("precio").textContent = "Precio: $" + parseFloat(precio).toFixed(2);
+
+              // Deshabilitar la opción por defecto de "Seleccionar producto"
+              productoSelect.options[0].disabled = true; // Deshabilitar la opción por defecto
+          } else {
+              // Si no se ha seleccionado un producto, limpiar la visualización
+              document.getElementById("stock").textContent = "Stock: ";
+              document.getElementById("precio").textContent = "Precio: ";
+          }
+      });
+
+      // Variable para mantener el total acumulado
+      var totalGeneral = 0;
+      var productosSeleccionados = [];  // Para almacenar los productos y las cantidades seleccionadas
+
+      // Función para agregar el producto y cantidad a la tabla
+      document.getElementById("agregarAlaTabla").onclick = function() {
+          var productoSelect = document.getElementById("producto");
+          var cantidadInput = document.getElementById("cantidad");
+          var productoId = productoSelect.value;
+          var productoNombre = productoSelect.options[productoSelect.selectedIndex]?.text;
+          var productoPrecio = parseFloat(productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio'));
+          var stockActual = parseInt(productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-stock'));
+          var cantidad = parseInt(cantidadInput.value);
+
+          // Mostrar un mensaje de error si no se ha seleccionado un producto
+          if (!productoId) {
+              document.getElementById("error-message").style.display = "block"; // Mostrar el mensaje de error
+              return; // No continuar con el proceso de agregar a la tabla
+          } else {
+              document.getElementById("error-message").style.display = "none"; // Ocultar el mensaje de error
+          }
+
+          // Verificar si la cantidad solicitada es mayor que el stock disponible
+          if (cantidad && cantidad > 0) {
+              if (cantidad > stockActual) {
+                  alert("La cantidad solicitada excede el stock disponible.");
+                  return;
+              }
+
+              // Restar el stock del producto seleccionado
+              productoSelect.options[productoSelect.selectedIndex].setAttribute('data-stock', stockActual - cantidad);
+
+              // Agregar el producto al array de productos seleccionados
+              productosSeleccionados.push({
+                  id: productoId,
+                  nombre: productoNombre,
+                  cantidad: cantidad,
+                  precio: productoPrecio,
+                  stockRestado: stockActual - cantidad
+              });
+
+              // Crear una nueva fila en la tabla
+              var tabla = document.getElementById("tablaPedido");
+              var fila = tabla.insertRow();
+              
+              var celdaProducto = fila.insertCell(0);
+              var celdaCantidad = fila.insertCell(1);
+              var celdaPrecioUnitario = fila.insertCell(2);
+              var celdaPrecioTotal = fila.insertCell(3);
+
+              // Calcular el precio total
+              var precioTotal = productoPrecio * cantidad;
+
+              // Rellenar las celdas con la información del producto
+              celdaProducto.innerHTML = productoNombre;  // Solo el nombre del producto
+              celdaCantidad.innerHTML = cantidad;  // Cantidad
+              celdaPrecioUnitario.innerHTML = "$" + productoPrecio.toFixed(2);  // Precio unitario
+              celdaPrecioTotal.innerHTML = "$" + precioTotal.toFixed(2);  // Precio total (Precio * Cantidad)
+
+              // Sumar al total general
+              totalGeneral += precioTotal;
+
+              // Mostrar el total en la parte inferior
+              document.getElementById("totalPedido").innerHTML = "Total: $" + totalGeneral.toFixed(2);
+
+              // Limpiar los campos del formulario
+              cantidadInput.value = "";
+              productoSelect.selectedIndex = 0;  // Restaurar la opción predeterminada a blanco
+
+              // Limpiar la visualización del stock y precio
+              document.getElementById("stock").textContent = "Stock: ";
+              document.getElementById("precio").textContent = "Precio: ";
+
+              // Cerrar el modal
+              modal.style.display = "none";
+          } else {
+              alert("Por favor ingresa una cantidad válida.");
+          }
+      };
+
+      // Función para cancelar el pedido
+      function cancelarPedido() {
+          // Restaurar el stock a su valor original
+          productosSeleccionados.forEach(function(producto) {
+              var productoSelect = document.getElementById("producto");
+              var option = Array.from(productoSelect.options).find(option => option.value == producto.id);
+              
+              if (option) {
+                  var stockOriginal = parseInt(option.getAttribute('data-stock')) + producto.cantidad;
+                  option.setAttribute('data-stock', stockOriginal);
+              }
+          });
+
+          // Limpiar la tabla y el total
+          var tabla = document.getElementById("tablaPedido");
+          tabla.innerHTML = "<thead><tr><th>Producto</th><th>Cantidad</th><th>Precio Unitario</th><th>Precio Total</th></tr></thead><tbody></tbody>";
+          document.getElementById("totalPedido").innerHTML = "Total: $0.00";
+
+          // Limpiar los productos seleccionados
+          productosSeleccionados = [];
+
+          // Limpiar los campos del formulario
+          var productoSelect = document.getElementById("producto");
+          var cantidadInput = document.getElementById("cantidad");
+          productoSelect.selectedIndex = 0;  // Restaurar la opción predeterminada
+          cantidadInput.value = "";
+
+          // Limpiar la visualización del stock y precio
+          document.getElementById("stock").textContent = "Stock: ";
+          document.getElementById("precio").textContent = "Precio: ";
+
+          // Cerrar el modal si está abierto
+          modal.style.display = "none";
+      }
+  </script>
 
 </body>
 </html>
