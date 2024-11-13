@@ -3,59 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifique los datos</title>
+    <title>Edición de Empleados</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
     <div class="container mt-5">
-        <h2 class="text-center">Registro los datos</h2>
+        <h2 class="text-center">Edición de Empleados</h2>
+        <div class="text-left mb-4">
+            <a href="{% url 'login:menu' %}" class="btn btn-secondary">Volver al Menú</a>
+        </div>
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th>DNI</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
-                    <th>Usuario</th>
-                    <th>Contraseña</th>
                     <th>Rol</th>
                     <th>Email</th>
                     <th>Domicilio</th>
                     <th>Teléfono</th>
                     <th>Fecha Nacimiento</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for empleado in empleados %}
-                    {% with login=empleado.login_set.first %}
-                    <tr>
-                        <td>{{ empleado.nombre_empl }}</td>
-                        <td>{{ empleado.apellido_empl }}</td>
-                        <td>{{ login.usuario }}</td>
-                        <td>{{ login.contraseña }}</td>
-                        <td>{{ empleado.get_rol_empl_display }}</td>
-                        <td>{{ empleado.correo_empl }}</td>
-                        <td>{{ empleado.domicilio_empl }}</td>
-                        <td>{{ empleado.telefono_empl }}</td>
-                        <td>{{ empleado.fecha_nacimiento_emp }}</td>
+                    <tr data-id="{{ empleado.dni_empl }}">
+                        <td>{{ empleado.dni_empl }}</td>
+                        <td contenteditable="true" data-field="nombre_empl">{{ empleado.nombre_empl }}</td>
+                        <td contenteditable="true" data-field="apellido_empl">{{ empleado.apellido_empl }}</td>
+                        <td contenteditable="true" data-field="rol_empl">{{ empleado.get_rol_empl_display }}</td>
+                        <td contenteditable="true" data-field="correo_empl">{{ empleado.correo_empl }}</td>
+                        <td contenteditable="true" data-field="domicilio_empl">{{ empleado.domicilio_empl }}</td>
+                        <td contenteditable="true" data-field="telefono_empl">{{ empleado.telefono_empl }}</td>
+                        <td data-field="fecha_nacimiento_emp">
+                            <input type="date" value="{{ empleado.fecha_nacimiento_emp }}" class="fecha-nacimiento form-control" />
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-sm btn-edit">Editar</button>
+                            <button class="btn btn-success btn-sm btn-save d-none">Guardar</button>
+                        </td>
                     </tr>
-                    {% endwith %}
                 {% endfor %}
             </tbody>
-
         </table>
-                <!-- Botones debajo de la tabla -->
-                <div class="d-flex justify-content-between mt-4">
-                    <!-- Botones Modificar, Eliminar, Limpiar a la izquierda -->
-                    <div>
-                        <button type="button" class="btn btn-primary mr-2">Modificar</button>
-                        <button type="button" class="btn btn-danger mr-2">Eliminar</button>
-                        <button type="button" class="btn btn-secondary">Limpiar</button>
-                    </div>
-        
-                    <!-- Botón Salir a la derecha -->
-                    <div>
-                        <button type="button" class="btn btn-warning">Salir</button>
-                    </div>
-                </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.btn-edit').on('click', function() {
+                var row = $(this).closest('tr');
+                row.find('[contenteditable="true"]').attr('contenteditable', 'true').addClass('editable-active');
+                row.find('.btn-edit').addClass('d-none');
+                row.find('.btn-save').removeClass('d-none');
+            });
+
+            $('.btn-save').on('click', function() {
+                var row = $(this).closest('tr');
+                var dni = row.data('id');
+
+                // Recorre cada campo editable
+                row.find('[contenteditable="true"], .fecha-nacimiento').each(function() {
+                    var field = $(this).data('field');
+                    var value;
+
+                    // Verifica si es la fecha de nacimiento para obtener el valor del campo de entrada de tipo date
+                    if (field === 'fecha_nacimiento_emp') {
+                        value = $(this).find('input[type="date"]').val();
+                    } else {
+                        value = $(this).text();
+                    }
+
+                    // Realiza la solicitud AJAX para actualizar cada campo
+                    $.ajax({
+                        url: '{% url "login:editar_empleado" %}',
+                        type: 'POST',
+                        data: {
+                            'dni': dni,
+                            'field': field,
+                            'value': value,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            alert(response.message);
+                        },
+                        error: function(xhr, status, error) {
+                            alert("Error al actualizar el campo.");
+                        }
+                    });
+                });
+
+                row.find('[contenteditable="true"]').attr('contenteditable', 'false').removeClass('editable-active');
+                row.find('.btn-edit').removeClass('d-none');
+                row.find('.btn-save').addClass('d-none');
+            });
+        });
+    </script>
 </body>
 </html>

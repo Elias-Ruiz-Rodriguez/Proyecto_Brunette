@@ -187,6 +187,7 @@
 
                     <button type="button" id="agregarAlaTabla">Agregar</button>
                 </form>
+                
             </div>
 
         </div>
@@ -219,7 +220,15 @@
             <button class="boton boton" onclick="egresoIngreso()">Egreso/Ingreso</button>
             <button class="boton boton" onclick="cancelarPedido()">Limpiar</button>
             <button class="boton boton" onclick="confirmarPedido()">Confirmar</button>
+        
+            <!-- Campo de selección para tipo de pago -->
+            <label for="tipo_pago">Tipo de Pago:</label>
+            <select name="tipo_pago" id="tipo_pago">
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta">Tarjeta</option>
+            </select>
         </div>
+        
         <div class="botones">
             <a href="{% url 'mostrar_menu' %}">
                 <button class="boton boton cancelar-btn">Cancelar</button>
@@ -273,7 +282,7 @@
             const tipo = document.getElementById('tipo').value;
 
             // Enviar los datos al servidor
-            fetch('/ingreso_egreso/', {
+            fetch('/ventas/ingreso_egreso/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -281,6 +290,8 @@
                 },
                 body: JSON.stringify({ caja_id: caja_id, monto: monto, tipo: tipo })
             })
+
+            
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {

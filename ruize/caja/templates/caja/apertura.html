@@ -19,28 +19,12 @@
 
         <div class="main">
             <h2>APERTURA DE CAJA</h2>
-<<<<<<< HEAD
             
             {% if caja.abierto %}
                 <div class="alert alert-warning">
                     <strong>Caja ya abierta:</strong> No es posible abrirla nuevamente.
-=======
-            <form method="post" action="{% url 'caja:apertura_caja' %}">
-                {% csrf_token %}
-                
-                <!-- El número de caja ya no es editable -->
-                <label for="numero_caja"><strong>Número de Caja:</strong></label>
-                <input type="text" name="numero_caja" value="{{ caja.numero_caja }}" readonly>
-
-                <input type="text" name="monto_apertura" placeholder="MONTO DE APERTURA" required>
-
-                <div class="buttons">
-                    <a href="{% url 'mostrar_menu' %}">
-                    <button class="cancel" type="button">CANCELAR</button>
-                    </a>
-                    <button class="open" type="submit">ABRIR CAJA</button>
->>>>>>> 2c6f35c86773d3f37b611110d1c6f848cd2d6b52
                 </div>
+                <!-- No mostrar el campo de monto cuando la caja ya está abierta -->
             {% else %}
                 <form method="post" action="{% url 'caja:apertura_caja' %}">
                     {% csrf_token %}
@@ -48,6 +32,7 @@
                     <label for="numero_caja"><strong>Número de Caja:</strong></label>
                     <input type="text" name="numero_caja" value="{{ caja.numero_caja }}" readonly>
 
+                    <!-- Mostrar el campo de monto solo cuando la caja no esté abierta -->
                     <input type="text" name="monto_apertura" placeholder="MONTO DE APERTURA" required>
 
                     <div class="buttons">

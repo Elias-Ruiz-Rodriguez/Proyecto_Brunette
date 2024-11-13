@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h3>Cajero: Ruiz</h3>
+            <p>Cajero: {{ usuario_nombre }}</p>
             <div class="time-date">
                 <span class="time">09:15:36</span>
                 <span class="date">27/09/2024</span>
@@ -72,8 +72,11 @@
                     <button class="add-product-button">AGREGAR PRODUCTO</button>
                 </a>
             </div>
+            
         </div>
-
+        <div class="text-left mb-4">
+            <a href="{% url 'login:menu' %}" class="confirm-button">Volver al Menú</a>
+        </div>
         
 
     </div>
@@ -109,7 +112,7 @@
                     document.getElementById('precio_prod').value = productPrice;
                     document.getElementById('stock_prod').value = productStock;
                 } else {
-                    // Clear the form if unselected
+                    // Limpiar el formulario si se deselecciona
                     document.getElementById('producto_id').value = '';
                     document.getElementById('nombre_prod').value = '';
                     document.getElementById('precio_prod').value = '';

@@ -5,8 +5,9 @@ from django.utils import timezone
 from .models import Producto, Pedido, DetallePedido
 from .forms import ProductoForm
 from decimal import Decimal
+from django.contrib.auth.decorators import login_required
 import json
-
+from caja.models import Caja
 
 
 def registrar_producto(request):
@@ -45,23 +46,38 @@ def editar_producto(request):
     return redirect('producto')  # Redirige a la página de productos si el método no es POST
 
 def crear_pedido(request):
-    productos = Producto.objects.all()
-    
-    # Procesar la selección inicial de productos
-    if request.method == 'POST' and 'producto' in request.POST:
-        producto_id = request.POST.get('producto')
-        cantidad = request.POST.get('cantidad')
-        
-        if cantidad and cantidad.isdigit() and int(cantidad) > 0:
-            producto = Producto.objects.get(id_prod=producto_id)
-            cantidad = int(cantidad)
-            # Redirigir de nuevo para actualizar la tabla o el modal
-            return render(request, 'pedido/pedido.html', {'productos': productos})
+    productos = Producto.objects.all()  # Traemos todos los productos disponibles
 
-        error_message = "Por favor ingresa una cantidad válida."
-        return render(request, 'pedido/pedido.html', {'productos': productos, 'error_message': error_message})
+    if request.method == 'POST':
+        # Procesamos la selección de productos
+        if 'producto' in request.POST and 'cantidad' in request.POST and 'tipo_pago' in request.POST:
+            producto_id = request.POST.get('producto')
+            cantidad = request.POST.get('cantidad')
+            tipo_pago = request.POST.get('tipo_pago')
 
-    return render(request, 'pedido/pedido.html', {'productos': productos})
+            if cantidad and cantidad.isdigit() and int(cantidad) > 0:
+                producto = Producto.objects.get(id_prod=producto_id)
+                cantidad = int(cantidad)
+
+                # Aquí agregamos la lógica para crear el pedido
+                # Guardar el pedido en la base de datos
+                pedido = Pedido(id_emple=1,  # Supongamos que el empleado es '1' o recupera el usuario actual
+                                id_caja=1,  # También supongamos que la caja es '1'
+                                id_venta=1,  # Asociar a una venta (aquí puedes poner la lógica real)
+                                tipo_pago=tipo_pago)
+                pedido.save()
+
+                # Aquí podrías agregar los productos al pedido (detalle del pedido)
+                # Puedes ajustar la lógica para asociar los productos seleccionados al pedido.
+
+                return redirect('pedido_exito')  # Redirige a la página de éxito
+
+            error_message = "Por favor ingresa una cantidad válida."
+            return render(request, 'pedido/pedido.html', {'productos': productos, 'error_message': error_message})
+
+    return render(request, 'pedido/pedido.html', {
+        'productos': productos,  # Lista de productos disponibles
+    })
 
 def confirmar_pedido(request):
     if request.method == "POST":
@@ -120,4 +136,39 @@ def producto(request):
         productos = Producto.objects.filter(nombre_prod__icontains=query)
     else:
         productos = Producto.objects.all()
-    return render(request, 'producto/producto.html', {'productos': productos})
+    
+    # Obtener el nombre del usuario desde la sesión
+    usuario_nombre = request.session.get('usuario_nombre', 'Usuario desconocido')
+    return render(request, 'producto/producto.html', {'productos': productos, 'usuario_nombre': usuario_nombre})
+
+def ingreso_egreso(request):
+    if request.method == 'POST':
+        # Obtener los datos del cuerpo de la solicitud
+        data = json.loads(request.body)
+        caja_id = data.get('caja_id')
+        monto = Decimal(data.get('monto', 0))  # Convertir el monto a Decimal para evitar errores de precisión
+        tipo = data.get('tipo')
+
+        # Obtener la caja desde la base de datos
+        try:
+            caja = Caja.objects.get(id=caja_id)
+
+            # Operación de ingreso
+            if tipo == 'ingreso':
+                caja.monto_actual += monto
+            # Operación de egreso
+            elif tipo == 'egreso':
+                if caja.monto_actual >= monto:  # Verificar si hay suficiente dinero para el egreso
+                    caja.monto_actual -= monto
+                else:
+                    return JsonResponse({'success': False, 'message': 'No hay suficiente dinero en caja para el egreso.'})
+
+            # Guardar los cambios en la caja
+            caja.save()
+
+            return JsonResponse({'success': True, 'message': f'{tipo.capitalize()} realizado correctamente.'})
+
+        except Caja.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Caja no encontrada.'})
+
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})

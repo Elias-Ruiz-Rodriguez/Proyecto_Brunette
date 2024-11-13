@@ -13,34 +13,18 @@
         <form id="registration-form" method="POST">
             {% csrf_token %}
 
-            <label for="nombre_prod">Nombre del Producto:</label>
-            <input type="text" id="nombre_prod" name="nombre_prod" required>
+            {{ form.as_p }}
 
-            <label for="precio_prod">Precio:</label>
-            <input type="number" step="0.01" id="precio_prod" name="precio_prod" required>
-
-            <label for="stock_min_prod">Stock Mínimo:</label>
-            <input type="number" id="stock_min_prod" name="stock_min_prod" required>
-
-            <label for="stock_actual_prod">Stock Actual:</label>
-            <input type="number" id="stock_actual_prod" name="stock_actual_prod" required>
-
-            <label for="stock_max_prod">Stock Máximo:</label>
-            <input type="number" id="stock_max_prod" name="stock_max_prod" required>
-
-            <label for="existencia_insumo">¿Producto disponible?</label>
-            <select id="existencia_insumo" name="existencia_insumo" required>
-                <option value="True">Sí</option>
-                <option value="False">No</option>
-            </select>
+            <div class="form-group">
+                <label for="id_categoria_prod">Categoría:</label>
+                {{ form.categoria_prod }}  <!-- Esto genera el campo select para categoría -->
+            </div>
 
             <button type="submit">Registrar Producto</button>
         </form>
-    </div>
-    <div class="actions">
-        <a href="javascript:history.back()">
-            <button class="back-button">VOLVER ATRÁS</button>
-        </a>
+        <div class="text-left mb-4">
+            <a href="{% url 'login:menu' %}" class="confirm-button">Volver al Menú</a>
+        </div>
     </div>
 </body>
 </html>

@@ -1,13 +1,29 @@
 from django.db import models
 
 class Producto(models.Model):
+    MENU = 'M'
+    GASEOSA = 'G'
+    CATEGORIA_CHOICES = [
+        (MENU, 'Plato de Comida'),
+        (GASEOSA, 'Gaseosa'),
+    ]
+    
     id_prod = models.AutoField(primary_key=True)
     nombre_prod = models.CharField(max_length=100)
     precio_prod = models.DecimalField(max_digits=10, decimal_places=2)
-    stock_min_prod = models.IntegerField()
-    stock_actual_prod = models.IntegerField()
-    punto_reposicion_prod = models.IntegerField()
-    stock_max_prod = models.IntegerField()
+    
+    # Campos solo aplicables para gaseosas
+    categoria_prod = models.CharField(
+        max_length=1,
+        choices=CATEGORIA_CHOICES,
+        default=MENU,  # Por defecto será un plato de comida
+    )
+    stock_min_prod = models.IntegerField(null=True, blank=True)
+    stock_actual_prod = models.IntegerField(null=True, blank=True)
+    punto_reposicion_prod = models.IntegerField(null=True, blank=True)
+    stock_max_prod = models.IntegerField(null=True, blank=True)
+    
+    # Campos aplicables para ambos tipos de productos
     existencia_insumo = models.BooleanField(default=True)
 
     def __str__(self):
@@ -33,7 +49,20 @@ class Pedido(models.Model):
     pagado_ped = models.BooleanField(default=False)
     fecha_pago = models.DateField(null=True, blank=True)
     hora_pago = models.TimeField(null=True, blank=True)
-    tipo_pago = models.CharField(max_length=50, null=True, blank=True)  # Ejemplo: Efectivo, Tarjeta
+    EFECTIVO = 'E'
+    TARJETA = 'T'
+    TIPO_PAGO_CHOICES = [
+        (EFECTIVO, 'Efectivo'),
+        (TARJETA, 'Tarjeta'),
+    ]
+    
+    tipo_pago = models.CharField(
+        max_length=1,
+        choices=TIPO_PAGO_CHOICES,
+        default=EFECTIVO,  # Establece un valor predeterminado si lo deseas
+        null=True, 
+        blank=True
+    )
 
     def __str__(self):
         return f"Pedido {self.id_pedido}"

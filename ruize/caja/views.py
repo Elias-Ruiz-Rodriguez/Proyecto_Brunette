@@ -49,32 +49,3 @@ def cierre_caja(request, caja_id):
         return redirect('login:menu')
 
     return render(request, 'caja/cierre_caja.html', {'caja': caja})
-
-def ingreso_egreso(request):
-    if request.method == 'POST':
-        # Obtener los datos del cuerpo de la solicitud
-        data = json.loads(request.body)
-        caja_id = data.get('caja_id')
-        monto = data.get('monto')
-        tipo = data.get('tipo')
-
-        # Obtener la caja desde la base de datos
-        try:
-            caja = Caja.objects.get(id=caja_id)
-
-            # Operación de ingreso
-            if tipo == 'ingreso':
-                caja.monto_efectivo_real += monto
-            # Operación de egreso
-            elif tipo == 'egreso':
-                caja.monto_efectivo_real -= monto
-
-            # Guardar los cambios
-            caja.save()
-
-            return JsonResponse({'success': True, 'message': f'{tipo.capitalize()} realizado correctamente.'})
-
-        except Caja.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Caja no encontrada.'})
-
-    return JsonResponse({'success': False, 'message': 'Método no permitido.'})

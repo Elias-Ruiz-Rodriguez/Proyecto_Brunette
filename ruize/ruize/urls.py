@@ -22,4 +22,5 @@ urlpatterns = [
     path('login/', include('login.urls', namespace='login')),
     path('registro_prod/', ventas_views.registrar_producto, name='registro'),
     path('registro_producto/', ventas_views.registrar_producto, name='registro_producto'),
+    path('ventas/', include('ventas.urls')),
 ]
