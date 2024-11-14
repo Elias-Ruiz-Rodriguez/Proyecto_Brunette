@@ -138,6 +138,27 @@
         .boton:hover {
             background-color: #be3ba6;
         }
+
+        /* Estilo para el select */
+        select {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #db5ac7;
+            border-radius: 4px;
+            background-color: #ffffff;
+            color: black;
+            appearance: none;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        /* Estilo para las opciones */
+        select option {
+            font-size: 14px;
+            color: black;
+            padding: 5px;
+        }
     </style>
 </head>
 
@@ -185,7 +206,7 @@
                     <input type="number" name="cantidad" id="cantidad" min="1" required>
                     <br><br>
 
-                    <button type="button" id="agregarAlaTabla">Agregar</button>
+                    <button class="boton boton" id="agregarAlaTabla">Agregar</button>
                 </form>
 
             </div>
@@ -222,17 +243,29 @@
             <button class="boton boton" onclick="confirmarPedido()">Confirmar</button>
 
             <!-- Campo de selección para tipo de pago -->
-            <label for="tipo_pago">Tipo de Pago:</label>
-            <select name="tipo_pago" id="tipo_pago">
-                <option value="efectivo">Efectivo</option>
-                <option value="tarjeta">Tarjeta</option>
-            </select>
+
         </div>
 
         <div class="botones">
             <a href="{% url 'mostrar_menu' %}">
                 <button class="boton boton cancelar-btn">Cancelar</button>
             </a>
+        </div>
+
+        <!-- Modal de Confirmación de Pedido -->
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="cerrarConfirmModal()">&times;</span>
+                <h2>Confirmación de Pedido</h2>
+                <p id="pedidoResumen"></p>
+                <label for="tipo_pago">Tipo de Pago:</label>
+                <select name="tipo_pago" id="tipo_pago">
+                    <option value="efectivo">Efectivo</option>
+                    <option value="tarjeta">Tarjeta</option>
+                </select><br><br>
+                <button class="boton boton" onclick="enviarPedido()">Confirmar</button>
+                <button class="boton boton" onclick="cerrarConfirmModal()">Cancelar</button><br>
+            </div>
         </div>
 
         <!-- Modal de Ingreso/Egreso -->
@@ -255,7 +288,7 @@
                         <option value="egreso">Egreso</option>
                     </select><br><br>
 
-                    <button type="button" onclick="realizarOperacion()">Realizar Operación</button>
+                    <button class="boton boton" onclick="realizarOperacion()">Realizar Operación</button>
                 </form>
             </div>
         </div>
@@ -324,24 +357,27 @@
             }
 
             let tipoPago = document.getElementById('tipo_pago').value;
-            let pedidoResumen = "Resumen del Pedido:\n";
+            let pedidoResumenTexto = "Resumen del Pedido:\n";
             let totalPedido = 0;
 
             productosSeleccionados.forEach(producto => {
                 let subtotal = producto.cantidad * producto.precio;
                 totalPedido += subtotal;
-                pedidoResumen += `Producto: ${producto.nombre}\nCantidad: ${producto.cantidad}\nPrecio Total: $${subtotal.toFixed(2)}\n\n`;
+                pedidoResumenTexto += `Producto: ${producto.nombre}\nCantidad: ${producto.cantidad}\nPrecio Total: $${subtotal.toFixed(2)}\n\n`;
             });
 
-            pedidoResumen += `Total del Pedido: $${totalPedido.toFixed(2)}`;
+            pedidoResumenTexto += `Total del Pedido: $${totalPedido.toFixed(2)}`;
 
-            // Mostrar ventana emergente para confirmar
-            var modalConfirm = confirm("¿Quieres confirmar el pedido?\n\n" + pedidoResumen);
-            if (!modalConfirm) {
-                return; // Si el usuario no confirma, no se hace nada
-            }
+            // Mostrar el resumen en el modal
+            document.getElementById("pedidoResumen").innerText = pedidoResumenTexto;
+            document.getElementById("confirmModal").style.display = "block"; // Mostrar el modal de confirmación
+        }
 
-            // Enviar productos seleccionados y tipo de pago a Django para guardar en la base de datos
+        // Función para enviar el pedido
+
+        function enviarPedido() {
+            let tipoPago = document.getElementById('tipo_pago').value;
+
             fetch("{% url 'confirmar_pedido' %}", {
                 method: "POST",
                 headers: {
@@ -350,15 +386,14 @@
                 },
                 body: JSON.stringify({
                     productos: productosSeleccionados,
-                    tipo_pago: tipoPago 
+                    tipo_pago: tipoPago
                 })
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert("Pedido confirmado!\n" + pedidoResumen);
-                        // Recargar la página actual (pedido.html) sin redirección
-                        location.reload();
+                        alert("Pedido confirmado!");
+                        location.reload(); // Recargar la página
                     } else {
                         alert("Hubo un problema al guardar el pedido.");
                     }
@@ -367,7 +402,16 @@
                     console.error("Error:", error);
                     alert("Ocurrió un error.");
                 });
+
+            cerrarConfirmModal(); // Cerrar el modal de confirmación
         }
+
+        // Funcino Cerrar modal
+
+        function cerrarConfirmModal() {
+            document.getElementById("confirmModal").style.display = "none";
+        }
+
         // Obtener el modal
         var modal = document.getElementById("myModal");
 

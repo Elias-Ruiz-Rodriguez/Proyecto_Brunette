@@ -53,7 +53,7 @@ def crear_pedido(request):
         if 'producto' in request.POST and 'cantidad' in request.POST and 'tipo_pago' in request.POST:
             producto_id = request.POST.get('producto')
             cantidad = request.POST.get('cantidad')
-            tipo_pago = request.POST.get('tipo_pago')
+            tipo_pago = request.POST.get('tipo_pago')  # Aquí tomamos el valor de tipo_pago
 
             if cantidad and cantidad.isdigit() and int(cantidad) > 0:
                 producto = Producto.objects.get(id_prod=producto_id)
@@ -61,10 +61,12 @@ def crear_pedido(request):
 
                 # Aquí agregamos la lógica para crear el pedido
                 # Guardar el pedido en la base de datos
-                pedido = Pedido(id_emple=1,  # Supongamos que el empleado es '1' o recupera el usuario actual
-                                id_caja=1,  # También supongamos que la caja es '1'
-                                id_venta=1,  # Asociar a una venta (aquí puedes poner la lógica real)
-                                tipo_pago=tipo_pago)
+                pedido = Pedido(
+                    id_emple=1,  # Supongamos que el empleado es '1' o recupera el usuario actual
+                    id_caja=1,  # También supongamos que la caja es '1'
+                    id_venta=1,  # Asociar a una venta (aquí puedes poner la lógica real)
+                    tipo_pago=tipo_pago  # Aquí guardamos el tipo de pago
+                )
                 pedido.save()
 
                 # Aquí podrías agregar los productos al pedido (detalle del pedido)
@@ -89,12 +91,13 @@ def confirmar_pedido(request):
 
             # Crear el pedido
             pedido = Pedido.objects.create(
-                id_emple=request.user.id,
+                id_emple=request.user.id,  # Se asume que el usuario está autenticado
                 id_caja=1,
                 id_venta=1,
                 generado_ped=True,
                 fecha_gene_ped=timezone.now().date(),
                 hora_gen_ped=timezone.now().time(),
+                tipo_pago=tipo_pago  # Aquí agregamos el tipo de pago al crear el pedido
             )
 
             for producto_data in productos:
@@ -140,6 +143,7 @@ def confirmar_pedido(request):
             return JsonResponse({"success": False, "error": "Error al procesar el pedido."})
 
     return JsonResponse({"success": False, "error": "Método no permitido."})
+
 
 def producto(request):
     query = request.GET.get('product', '')  # Obtener el término de búsqueda

@@ -1,35 +1,105 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Botones Centrados</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'menu/menu.css' %}">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .time-date-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-date {
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            /* Puedes ajustar el ancho máximo */
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            /* Tres columnas */
+            grid-template-rows: repeat(2, auto);
+            /* Dos filas */
+            gap: 10px;
+            /* Espacio entre los botones */
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .button {
+            padding: 20px;
+            font-size: 18px;
+            color: white;
+            background-color: #db5ac7;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+            min-width: 200px;
+            min-height: 80px;
+            /* Evita que los botones sean demasiado pequeños */
+        }
+
+        .button:hover {
+            background-color: #be3ba6;
+            color: white;
+        }
+    </style>
 </head>
+
 <body>
     <div class="time-date-container">
         <div class="time-date" id="current-time">12:00</div>
         <div class="time-date" id="current-date">01/11/2024</div>
     </div>
-    
+
     <div class="button-container">
         <a href="{% url 'pedido' %}">
-        <button class="button">PEDIDO</button>
-    </a>
+            <button class="button">PEDIDO</button>
+        </a>
         <a href="{% url 'registrar_usuario' %}">
             <button class="button">REGISTRAR USUARIO</button>
         </a>
-        
+
         <button class="button">CIERRE DE CAJA</button>
-      
-        
+
+
         <a href="{% url 'producto' %}">
-        <button class="button">PRODUCTO</button>
-    </a>
+            <button class="button">PRODUCTO</button>
+        </a>
         <a href="{% url 'verificar_datos' %}">
-        <button class="button">REGISTRO DE USUARIO</button>
-    </a>
+            <button class="button">REGISTRO DE USUARIO</button>
+        </a>
+        <button class="button">:v</button>
     </div>
 
     <script>
@@ -37,14 +107,15 @@
             const now = new Date();
             const optionsDate = { year: 'numeric', month: '2-digit', day: '2-digit' };
             const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-            
+
             document.getElementById('current-date').innerText = now.toLocaleDateString('es-ES', optionsDate);
             document.getElementById('current-time').innerText = now.toLocaleTimeString('es-ES', optionsTime);
         }
-        
+
         // Actualizar la hora y la fecha cada segundo
         setInterval(updateDateTime, 1000);
         updateDateTime(); // Inicializar al cargar
     </script>
 </body>
+
 </html>

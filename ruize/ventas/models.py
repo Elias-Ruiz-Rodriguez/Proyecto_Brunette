@@ -49,15 +49,15 @@ class Pedido(models.Model):
     pagado_ped = models.BooleanField(default=False)
     fecha_pago = models.DateField(null=True, blank=True)
     hora_pago = models.TimeField(null=True, blank=True)
-    EFECTIVO = 'E'
-    TARJETA = 'T'
+    EFECTIVO = 'efectivo'
+    TARJETA = 'tarjeta'
     TIPO_PAGO_CHOICES = [
         (EFECTIVO, 'Efectivo'),
         (TARJETA, 'Tarjeta'),
     ]
     
     tipo_pago = models.CharField(
-        max_length=1,
+        max_length=10,
         choices=TIPO_PAGO_CHOICES,
         default=EFECTIVO,  # Establece un valor predeterminado si lo deseas
         null=True, 
