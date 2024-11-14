@@ -16,16 +16,25 @@ class Producto(models.Model):
     categoria_prod = models.CharField(
         max_length=1,
         choices=CATEGORIA_CHOICES,
-        default=MENU,  # Por defecto será un plato de comida
+        default=MENU,
     )
     stock_min_prod = models.IntegerField(null=True, blank=True)
-    stock_actual_prod = models.IntegerField(null=True, blank=True)
-    punto_reposicion_prod = models.IntegerField(null=True, blank=True)
-    stock_max_prod = models.IntegerField(null=True, blank=True)
+    stock_actual_prod = models.IntegerField(default=0, null=True, blank=True)
+    punto_reposicion_prod = models.IntegerField(default=0,null=True, blank=True)
+    stock_max_prod = models.IntegerField(default=0,null=True, blank=True)
     
     # Campos aplicables para ambos tipos de productos
     existencia_insumo = models.BooleanField(default=True)
-
+    
+    def save(self, *args, **kwargs):
+        # Limpiar campos de stock si el producto es de tipo "Menu"
+        if self.categoria_prod == self.MENU:
+            self.stock_min_prod = None
+            self.stock_actual_prod = None
+            self.punto_reposicion_prod = None
+            self.stock_max_prod = None
+        super().save(*args, **kwargs)
+        
     def __str__(self):
         return self.nombre_prod
 
@@ -49,15 +58,15 @@ class Pedido(models.Model):
     pagado_ped = models.BooleanField(default=False)
     fecha_pago = models.DateField(null=True, blank=True)
     hora_pago = models.TimeField(null=True, blank=True)
-    EFECTIVO = 'efectivo'
-    TARJETA = 'tarjeta'
+    EFECTIVO = 'E'
+    TARJETA = 'T'
     TIPO_PAGO_CHOICES = [
         (EFECTIVO, 'Efectivo'),
         (TARJETA, 'Tarjeta'),
     ]
     
     tipo_pago = models.CharField(
-        max_length=10,
+        max_length=1,
         choices=TIPO_PAGO_CHOICES,
         default=EFECTIVO,  # Establece un valor predeterminado si lo deseas
         null=True, 

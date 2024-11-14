@@ -15,10 +15,7 @@
 
             {{ form.as_p }}
 
-            <div class="form-group">
-                <label for="id_categoria_prod">Categoría:</label>
-                {{ form.categoria_prod }}  <!-- Esto genera el campo select para categoría -->
-            </div>
+            
 
             <button type="submit">Registrar Producto</button>
         </form>
@@ -26,5 +23,29 @@
             <a href="{% url 'login:menu' %}" class="confirm-button">Volver al Menú</a>
         </div>
     </div>
+
+    <!-- Agrega el script para manejar la visualización de los campos de stock -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoriaSelect = document.getElementById('id_categoria_prod');
+            const stockFields = [
+                document.getElementById('id_stock_min_prod'),
+                document.getElementById('id_stock_actual_prod'),
+                document.getElementById('id_punto_reposicion_prod'),
+                document.getElementById('id_stock_max_prod')
+            ];
+
+            function toggleStockFields() {
+                const isMenuSelected = categoriaSelect.value === 'M';
+                stockFields.forEach(field => {
+                    field.disabled = isMenuSelected;  // Deshabilita los campos si es "Plato de Comida"
+                    field.parentElement.style.display = isMenuSelected ? 'none' : 'block';  // Muestra o oculta el campo visualmente
+                });
+            }
+
+            categoriaSelect.addEventListener('change', toggleStockFields);
+            toggleStockFields();  // Llama a la función al cargar la página
+        });
+    </script>
 </body>
 </html>
