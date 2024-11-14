@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
 
 class Empleados(models.Model):
     dni_empl = models.CharField(primary_key=True, max_length=20)
@@ -16,8 +17,7 @@ class Empleados(models.Model):
     fecha_nacimiento_emp = models.DateField()
 
     def __str__(self):
-        return f"{self.nombre_empl} {self.apellido_empl}"
-        
+        return f"{self.dni_empl}"     
 
 class Login(models.Model):
     id_login = models.BigAutoField(primary_key=True)
@@ -27,5 +27,11 @@ class Login(models.Model):
     ultimo_acceso = models.DateTimeField(null=True, blank=True)
     hs_login = models.DateTimeField(auto_now_add=True)
 
+    def set_password(self, raw_password):
+        self.contraseña = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.contraseña)
+
     def __str__(self):
-        return f"{self.usuario} - Último acceso: {self.ultimo_acceso}"
+        return f"{self.usuario}"

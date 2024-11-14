@@ -17,8 +17,11 @@
             /* Alinea el contenido hacia arriba */
             align-items: flex-start;
             /* Alinea el contenido hacia el inicio vertical */
-            background-color: #f4f4f4;
+            background-color: white;
             /* Color de fondo */
+            font-family: Arial, sans-serif;
+            color: #212529;
+            line-height: 1.5;
         }
 
         /* Contenedor principal */
@@ -69,6 +72,7 @@
             cursor: pointer;
         }
 
+
         /* Estilos de la tabla */
         table {
             width: 100%;
@@ -79,17 +83,18 @@
         table,
         th,
         td {
-            border: 1px solid white;
+            border: 1px solid #450d38;
         }
 
         th,
         td {
             padding: 8px;
             text-align: center;
+            background-color: white;
         }
 
         th {
-            background-color: #db5ac7;
+            background-color: white;
         }
 
         /* Estilos del total */
@@ -141,7 +146,7 @@
 
         /* Estilo para el select */
         select {
-            width: 100%;
+            width: 35%;
             padding: 8px;
             font-size: 14px;
             border: 1px solid #db5ac7;
@@ -176,7 +181,7 @@
                 <h2>Seleccionar Producto y Cantidad</h2>
 
                 <!-- Mensaje de error si la cantidad es incorrecta o el producto no está seleccionado -->
-                <p id="error-message" style="color: red; display: none;">¡Por favor, elige un producto primero!</p>
+                <p id="error-message" style="color: #450d38; display: none;">¡Por favor, elige un producto primero!</p>
 
                 <form id="formAgregarProducto">
                     {% csrf_token %}

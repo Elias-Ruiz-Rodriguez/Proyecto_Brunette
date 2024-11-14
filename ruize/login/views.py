@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+
 from django.utils import timezone
 from .models import Login, Empleados
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 
 def inicio_sesion(request):
-    """Vista para manejar el inicio de sesión"""
+    inicio_exitoso = False  # Variable para detectar éxito
     if request.method == 'POST':
         usuario = request.POST.get('usuario')
         contraseña = request.POST.get('contraseña')
@@ -14,16 +15,20 @@ def inicio_sesion(request):
         try:
             user = Login.objects.get(usuario=usuario)
             if user.contraseña == contraseña:
+                # Actualizar el campo 'ultimo_acceso' con la fecha y hora actual
+                user.ultimo_acceso = timezone.now()
+                user.save()
+
                 # Almacena el nombre del usuario en la sesión
                 request.session['usuario_nombre'] = f"{user.dni_empl.nombre_empl} {user.dni_empl.apellido_empl}"
-                messages.success(request, "Inicio de sesión exitoso")
+                inicio_exitoso = True  # Marca el inicio como exitoso
                 return redirect('apertura_caja')  # Redirige a la vista de apertura de caja
             else:
-                messages.error(request, "Contraseña incorrecta")
+                inicio_exitoso = False  # Marca el inicio como fallido
         except Login.DoesNotExist:
-            messages.error(request, "Usuario no encontrado")
+            inicio_exitoso = False  # Marca el inicio como fallido
     
-    return render(request, 'inicio_sesion/inicio_sesion.html')
+    return render(request, 'inicio_sesion/inicio_sesion.html', {'inicio_exitoso': inicio_exitoso})
 
 def registrar_usuario(request):
     """Vista para manejar el registro de nuevos usuarios"""

@@ -1,32 +1,108 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'inicio_sesion/inicio_sesion.css' %}">
-    
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            background-color: #f7ccf3;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+        }
+
+        .login-container h2 {
+            color: #000;
+            margin-bottom: 20px;
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 200px;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #db5ac7;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .login-container input[type="text"]::placeholder,
+        .login-container input[type="password"]::placeholder {
+            color: white;
+            font-weight: bold;
+        }
+
+        .login-container .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        /* Botones */
+
+        .login-container button {
+            width: 48%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Estilo de los botones */
+        .boton {
+            padding: 10px 20px;
+            background-color: #db5ac7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .boton:hover {
+            background-color: #be3ba6;
+        }
+    </style>
 </head>
+
 <body>
     <div class="login-container">
         <h2>INICIO DE SESIÓN</h2>
         <form method="POST">
             {% csrf_token %}
-            <input type="text" name="usuario" placeholder="INGRESE SU USUARIO" required>
-            <input type="password" name="contraseña" placeholder="INGRESE SU CONTRASEÑA" required>
+            <input type="text" name="usuario" placeholder="Ingrese su usuario" required>
+            <input type="password" name="contraseña" placeholder="Ingrese su contraseña" required>
             <div class="button-container">
-                <button type="reset" class="cancel-btn">CANCELAR</button>
-                <button type="submit" class="login-btn">INICIAR</button>
+                <button type="reset" class="boton">Cancelar</button>
+                <button type="submit" class="boton boton">Iniciar</button>
             </div>
-        </form>
-        {% if messages %}
-            <div class="error-messages">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-    </div>
+            
+    <!-- Script para mostrar la ventana emergente si el inicio fue exitoso -->
+    <script>
+        // Verifica si el parámetro success=true está en la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            alert("Inicio de sesión exitoso");
+        }
+    </script>
+
+
 </body>
+
 </html>

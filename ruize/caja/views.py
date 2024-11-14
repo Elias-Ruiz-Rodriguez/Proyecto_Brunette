@@ -1,31 +1,48 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from .models import Caja, HistorialCaja
+from login.models import Login
 from datetime import datetime
-from django.contrib.auth.models import User
 from decimal import Decimal
 from django.contrib import messages
 from django.http import JsonResponse
 import json
 
 def apertura_caja(request):
+    # Obtener el ID del usuario desde la sesión
+    user_id = request.session.get('usuario_id')  # Obtener el ID del usuario logueado
+
+    if not user_id:
+        # Si no hay un usuario logueado, redirigir a la página de inicio de sesión
+        messages.error(request, "No has iniciado sesión.")
+        return redirect('inicio_sesion')
+
+    try:
+        # Obtener el usuario de Login usando el ID guardado en la sesión
+        usuario = Login.objects.get(id_login=user_id)
+    except Login.DoesNotExist:
+        # Si el usuario no existe, redirigir a la página de inicio de sesión
+        messages.error(request, "Usuario no encontrado.")
+        return redirect('inicio_sesion')
+
     # Obtener o crear la instancia de Caja con el número de caja "1"
     caja, created = Caja.objects.get_or_create(numero_caja="1")
     
     # Verificar si la caja ya está abierta
     if caja.abierto:
-        messages.warning(request, "La caja ya está abierta y no puede abrirse nuevamente.")
-        return render(request, 'caja/apertura.html', {'caja': caja, 'current_date': timezone.now().strftime('%d/%m/%Y')})
+        messages.warning(request, "La caja ya está abierta. No es posible abrirla nuevamente.")
+        return redirect('login:menu')  # Redirigir a la página del menú o a otra vista adecuada
     
     if request.method == 'POST':
         monto_apertura = request.POST.get('monto_apertura')
         if monto_apertura:
-            caja.abrir(monto=Decimal(monto_apertura), usuario=request.user)
+            # Usamos el usuario obtenido de la sesión en lugar de request.user
+            caja.abrir(monto=Decimal(monto_apertura), usuario=usuario)
 
             # Registrar el historial de apertura
             HistorialCaja.objects.create(
                 caja=caja,
-                usuario=request.user,
+                usuario=usuario,
                 accion='apertura',
                 monto_inicial=Decimal(monto_apertura),
                 monto_final=caja.monto_actual,
@@ -33,42 +50,28 @@ def apertura_caja(request):
             )
 
             messages.success(request, f"Caja {caja.numero_caja} abierta correctamente.")
-            return redirect('login:menu')
-
-    current_date = timezone.now().strftime('%d/%m/%Y')
-    return render(request, 'caja/apertura.html', {'current_date': current_date, 'caja': caja})
-
-def apertura_caja(request):
-    # Obtener o crear la instancia de Caja con el número de caja "1"
-    caja, created = Caja.objects.get_or_create(numero_caja="1")
-    
-    # Verificar si la caja ya está abierta
-    if caja.abierto:
-        messages.warning(request, "La caja ya está abierta y no puede abrirse nuevamente.")
-        return render(request, 'caja/apertura.html', {'caja': caja, 'current_date': timezone.now().strftime('%d/%m/%Y')})
-    
-    if request.method == 'POST':
-        monto_apertura = request.POST.get('monto_apertura')
-        if monto_apertura:
-            caja.abrir(monto=Decimal(monto_apertura), usuario=request.user)
-
-            # Registrar el historial de apertura
-            HistorialCaja.objects.create(
-                caja=caja,
-                usuario=request.user,
-                accion='apertura',
-                monto_inicial=Decimal(monto_apertura),
-                monto_final=caja.monto_actual,
-                observaciones="Apertura de caja exitosa"
-            )
-
-            messages.success(request, f"Caja {caja.numero_caja} abierta correctamente.")
-            return redirect('login:menu')
+            return redirect('login:menu')  # Redirigir al menú después de abrir la caja correctamente
 
     current_date = timezone.now().strftime('%d/%m/%Y')
     return render(request, 'caja/apertura.html', {'current_date': current_date, 'caja': caja})
 
 def cierre_caja(request):
+    # Obtener el ID del usuario desde la sesión
+    user_id = request.session.get('usuario_id')  # Obtener el ID del usuario logueado
+
+    if not user_id:
+        # Si no hay un usuario logueado, redirigir a la página de inicio de sesión
+        messages.error(request, "No has iniciado sesión.")
+        return redirect('inicio_sesion')
+
+    try:
+        # Obtener el usuario de Login usando el ID guardado en la sesión
+        usuario = Login.objects.get(id_login=user_id)
+    except Login.DoesNotExist:
+        # Si el usuario no existe, redirigir a la página de inicio de sesión
+        messages.error(request, "Usuario no encontrado.")
+        return redirect('inicio_sesion')
+
     # Obtener la última caja abierta (si la hay)
     caja = Caja.objects.filter(abierto=True).last()
 
@@ -92,7 +95,7 @@ def cierre_caja(request):
         # Registrar el historial de cierre
         HistorialCaja.objects.create(
             caja=caja,
-            usuario=request.user,
+            usuario=usuario,  # Usamos el usuario obtenido de la sesión
             accion='cierre',
             monto_inicial=caja.monto_actual,
             monto_final=monto_final,

@@ -4,47 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apertura de Caja</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'caja/apertura_caja.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 500px;
+            background-color: #f7ccf3;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+        }
+
+        .container h2 {
+            margin: 0;
+            color: black;
+            font-weight: bold;
+        }
+
+        .container input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 1em;
+            background-color: #db5ac7;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .container input[type="text"]::placeholder {
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Estilo para el texto "Número de Caja" */
+        .container label strong {
+            color: black;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .boton {
+            padding: 10px 20px;
+            background-color: #db5ac7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .boton:hover {
+            background-color: #be3ba6;
+        }
+
+        .back {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: #AA4CA6;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <span class="user">CAJERO: {{ user.username }}</span>
-            <div class="date-time">
-                <span class="date">{{ current_date }}</span>
-                <span class="time" id="current-time"></span>
+        <h2>APERTURA DE CAJA</h2>
+        
+        {% if caja.abierto %}
+            <div class="alert alert-warning">
+                <strong>Caja ya abierta:</strong> No es posible abrirla nuevamente.
             </div>
-        </div>
+        {% else %}
+            <form method="post" action="{% url 'caja:apertura_caja' %}">
+                {% csrf_token %}
+                
+                <label for="numero_caja"><strong>Número de Caja:</strong></label>
+                
+                <input type="text" name="numero_caja" value="{{ caja.numero_caja }}" readonly>
+                <input type="text" name="monto_apertura" placeholder="Monto de apertura" required>
 
-        <div class="main">
-            <h2>APERTURA DE CAJA</h2>
-            
-            {% if caja.abierto %}
-                <div class="alert alert-warning">
-                    <strong>Caja ya abierta:</strong> No es posible abrirla nuevamente.
+                <div class="buttons">
+                    <button class="boton" type="submit">Abrir caja</button>
                 </div>
-                <!-- No mostrar el campo de monto cuando la caja ya está abierta -->
-            {% else %}
-                <form method="post" action="{% url 'caja:apertura_caja' %}">
-                    {% csrf_token %}
-                    
-                    <label for="numero_caja"><strong>Número de Caja:</strong></label>
-                    <input type="text" name="numero_caja" value="{{ caja.numero_caja }}" readonly>
-
-                    <!-- Mostrar el campo de monto solo cuando la caja no esté abierta -->
-                    <input type="text" name="monto_apertura" placeholder="MONTO DE APERTURA" required>
-
-                    <div class="buttons">
-                        <button class="cancel" type="button" href="{% url 'mostrar_menu' %}">CANCELAR</button>
-                        <button class="open" type="submit" href="{% url 'mostrar_menu' %}">ABRIR CAJA</button>
-                    </div>
-                </form>
-            {% endif %}
-        </div>
-    </div>
-    <div>
-        <a href="{% url 'login:menu' %}" class="back">VOLVER</a>
+            </form>
+        {% endif %}
+        
     </div>
 
     <script>

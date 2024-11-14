@@ -15,7 +15,7 @@ class Caja(models.Model):
     fecha_apertura = models.DateTimeField(null=True, blank=True)
     fecha_cierre = models.DateTimeField(null=True, blank=True)
     monto_cierre = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    usuario_apertura = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    usuario_apertura = models.ForeignKey('login.Login', on_delete=models.SET_NULL, null=True, blank=True)
     abierto = models.BooleanField(default=False)
 
     def abrir(self, monto, usuario):
@@ -46,7 +46,7 @@ class HistorialCaja(models.Model):
         ('cierre', 'Cierre'),
     ]
     caja = models.ForeignKey('Caja', on_delete=models.CASCADE)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey('login.Login', on_delete=models.CASCADE)
     accion = models.CharField(max_length=10, choices=CAJA_CHOICES)
     monto_inicial = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     monto_final = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
@@ -54,4 +54,4 @@ class HistorialCaja(models.Model):
     observaciones = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.get_accion_display()} - Caja {self.caja.numero_caja} - {self.usuario.username}"
+        return f"{self.get_accion_display()} - Caja {self.caja.numero_caja} - {self.usuario}"
