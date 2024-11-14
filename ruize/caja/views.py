@@ -105,7 +105,11 @@ def cierre_caja(request):
         # Enviamos un mensaje de éxito
         messages.success(request, "Caja cerrada correctamente.")
 
-        # Redirigimos a alguna página (por ejemplo, al menú de inicio)
-        return redirect('login:menu')
+        # Limpiar la sesión (eliminar usuario_id y otros datos de sesión)
+        del request.session['usuario_id']  # Eliminar el ID de usuario
+        del request.session['usuario_nombre']  # Eliminar el nombre de usuario si lo estás usando
+
+        # Redirigir al inicio de sesión
+        return redirect('inicio_sesion')
 
     return render(request, 'caja/cierre_caja.html', {'caja': caja})

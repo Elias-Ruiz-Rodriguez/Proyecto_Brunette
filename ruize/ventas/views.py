@@ -48,6 +48,12 @@ def editar_producto(request):
 def crear_pedido(request):
     productos = Producto.objects.all()  # Traemos todos los productos disponibles
 
+    # Verificamos si el usuario está autenticado (basado en la sesión)
+    user_id = request.session.get('usuario_id')
+    if not user_id:
+        messages.error(request, "No has iniciado sesión.")
+        return redirect('inicio_sesion')  # Redirigir al inicio de sesión si no hay usuario
+
     caja = Caja.objects.filter(abierto=True).last()
 
     if request.method == 'POST':
@@ -61,12 +67,11 @@ def crear_pedido(request):
                 producto = Producto.objects.get(id_prod=producto_id)
                 cantidad = int(cantidad)
 
-                # Aquí agregamos la lógica para crear el pedido
-                # Guardar el pedido en la base de datos
+                # Crear el pedido usando el ID de usuario de la sesión
                 pedido = Pedido(
-                    id_emple=1,  # Supongamos que el empleado es '1' o recupera el usuario actual
-                    id_caja=1,  # También supongamos que la caja es '1'
-                    id_venta=1,  # Asociar a una venta (aquí puedes poner la lógica real)
+                    id_emple=user_id,  # Usamos el ID del usuario desde la sesión
+                    id_caja=caja.id_caja,  # Suponiendo que la caja ya está seleccionada
+                    id_venta=1,  # Aquí puedes poner la lógica real de venta
                     tipo_pago=tipo_pago  # Aquí guardamos el tipo de pago
                 )
                 pedido.save()
@@ -91,9 +96,14 @@ def confirmar_pedido(request):
             tipo_pago = data.get('tipo_pago')  # Obtener tipo de pago desde la solicitud
             total_pedido = 0
 
+            # Verificar si el usuario está autenticado
+            user_id = request.session.get('usuario_id')
+            if not user_id:
+                return JsonResponse({"success": False, "error": "No has iniciado sesión."})
+
             # Crear el pedido
             pedido = Pedido.objects.create(
-                id_emple=request.user.id,  # Se asume que el usuario está autenticado
+                id_emple=user_id,  # Usamos el ID del usuario desde la sesión
                 id_caja=1,
                 id_venta=1,
                 generado_ped=True,
@@ -119,9 +129,10 @@ def confirmar_pedido(request):
                     total_ped=total_pedido
                 )
 
-                # Actualizar el stock del producto
-                producto.stock_actual_prod -= cantidad
-                producto.save()
+                # Verificar si el producto tiene un stock numérico válido
+                if producto.stock_actual_prod is not None and not isinstance(producto.stock_actual_prod, str):
+                    producto.stock_actual_prod -= cantidad  # Restar stock si es un número
+                    producto.save()
 
             # Actualizar el total en el pedido
             pedido.total_ped = total_pedido
@@ -168,7 +179,7 @@ def ingreso_egreso(request):
 
         # Obtener la caja desde la base de datos
         try:
-            caja = Caja.objects.get(id=caja_id)
+            caja = Caja.objects.get(id_caja=caja_id)  # Cambiado de 'id' a 'id_caja'
 
             # Operación de ingreso
             if tipo == 'ingreso':

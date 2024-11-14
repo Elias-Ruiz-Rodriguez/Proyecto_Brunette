@@ -13,20 +13,25 @@ def inicio_sesion(request):
         contraseña = request.POST.get('contraseña')
         
         try:
+            # Intentamos obtener al usuario por el nombre de usuario
             user = Login.objects.get(usuario=usuario)
-            if user.contraseña == contraseña:
-                # Actualizar el campo 'ultimo_acceso' con la fecha y hora actual
+            if user.contraseña == contraseña:  # Compara la contraseña en texto plano
+                # Actualizamos el campo 'ultimo_acceso' con la fecha y hora actual
                 user.ultimo_acceso = timezone.now()
                 user.save()
 
-                # Almacena el nombre del usuario en la sesión
+                # Almacenamos el ID del usuario y el nombre completo en la sesión
                 request.session['usuario_nombre'] = f"{user.dni_empl.nombre_empl} {user.dni_empl.apellido_empl}"
+                request.session['usuario_id'] = user.id_login  # Guardar el ID del usuario
+
                 inicio_exitoso = True  # Marca el inicio como exitoso
                 return redirect('apertura_caja')  # Redirige a la vista de apertura de caja
             else:
                 inicio_exitoso = False  # Marca el inicio como fallido
+                messages.error(request, "Contraseña incorrecta.")
         except Login.DoesNotExist:
             inicio_exitoso = False  # Marca el inicio como fallido
+            messages.error(request, "Usuario no encontrado.")
     
     return render(request, 'inicio_sesion/inicio_sesion.html', {'inicio_exitoso': inicio_exitoso})
 
