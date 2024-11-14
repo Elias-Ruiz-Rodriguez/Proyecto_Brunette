@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'registrar/registro_producto.css' %}">
 </head>
+
 <body>
     <div class="form-container">
         <h1>Registrar Producto</h1>
@@ -15,7 +17,7 @@
 
             {{ form.as_p }}
 
-            
+
 
             <button type="submit">Registrar Producto</button>
         </form>
@@ -26,7 +28,7 @@
 
     <!-- Agrega el script para manejar la visualización de los campos de stock -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const categoriaSelect = document.getElementById('id_categoria_prod');
             const stockFields = [
                 document.getElementById('id_stock_min_prod'),
@@ -48,4 +50,5 @@
         });
     </script>
 </body>
+
 </html>

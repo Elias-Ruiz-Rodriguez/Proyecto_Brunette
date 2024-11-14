@@ -172,20 +172,28 @@
                 </thead>
                 <tbody>
                     {% if productos %}
-                    {% for producto in productos %}
-                    <tr>
-                        <td><input type="checkbox" class="product-select" data-id="{{ producto.id_prod }}"
-                                data-nombre="{{ producto.nombre_prod }}" data-precio="{{ producto.precio_prod }}"
-                                data-stock="{{ producto.stock_actual_prod }}"></td>
-                        <td>{{ producto.stock_actual_prod }}</td>
-                        <td>{{ producto.nombre_prod }}</td>
-                        <td>{{ producto.precio_prod }}</td>
-                    </tr>
-                    {% endfor %}
+                        {% for producto in productos %}
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="product-select" 
+                                           data-id="{{ producto.id_prod }}" 
+                                           data-nombre="{{ producto.nombre_prod }}" 
+                                           data-precio="{{ producto.precio_prod }}" 
+                                           data-stock="{{ producto.stock_actual_prod }}">
+                                </td>
+                                <td>
+                                    {% if producto.stock_actual_prod is not None %}
+                                        {{ producto.stock_actual_prod }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ producto.nombre_prod }}</td>
+                                <td>{{ producto.precio_prod }}</td>
+                            </tr>
+                        {% endfor %}
                     {% else %}
-                    <tr>
-                        <td colspan="4" style="text-align:center;">No hay productos disponibles</td>
-                    </tr>
+                        <tr>
+                            <td colspan="4" style="text-align:center;">No hay productos disponibles</td>
+                        </tr>
                     {% endif %}
                 </tbody>
             </table>
