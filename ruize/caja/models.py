@@ -4,8 +4,8 @@ from django.utils import timezone
 from decimal import Decimal
 
 class Caja(models.Model):
-    id = models.AutoField(primary_key=True)
-    numero_caja = models.CharField(max_length=10, unique=True)
+    id_caja = models.AutoField(primary_key=True)
+    numero_caja = models.IntegerField(unique=True)
     monto_apertura = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     monto_actual = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     monto_efectivo_real = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
@@ -39,3 +39,19 @@ class Caja(models.Model):
 
     def __str__(self):
         return f"Caja {self.numero_caja} - {'abierta' if self.abierto else 'cerrada'}"
+    
+class HistorialCaja(models.Model):
+    CAJA_CHOICES = [
+        ('apertura', 'Apertura'),
+        ('cierre', 'Cierre'),
+    ]
+    caja = models.ForeignKey('Caja', on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    accion = models.CharField(max_length=10, choices=CAJA_CHOICES)
+    monto_inicial = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    monto_final = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    fecha = models.DateTimeField(auto_now_add=True)
+    observaciones = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.get_accion_display()} - Caja {self.caja.numero_caja} - {self.usuario.username}"

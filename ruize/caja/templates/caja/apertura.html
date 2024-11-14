@@ -36,8 +36,8 @@
                     <input type="text" name="monto_apertura" placeholder="MONTO DE APERTURA" required>
 
                     <div class="buttons">
-                        <button class="cancel" type="button" onclick="window.location.href='{% url 'login:menu' %}'">CANCELAR</button>
-                        <button class="open" type="submit">ABRIR CAJA</button>
+                        <button class="cancel" type="button" href="{% url 'mostrar_menu' %}">CANCELAR</button>
+                        <button class="open" type="submit" href="{% url 'mostrar_menu' %}">ABRIR CAJA</button>
                     </div>
                 </form>
             {% endif %}

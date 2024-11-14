@@ -48,6 +48,8 @@ def editar_producto(request):
 def crear_pedido(request):
     productos = Producto.objects.all()  # Traemos todos los productos disponibles
 
+    caja = Caja.objects.filter(abierto=True).last()
+
     if request.method == 'POST':
         # Procesamos la selección de productos
         if 'producto' in request.POST and 'cantidad' in request.POST and 'tipo_pago' in request.POST:
@@ -63,7 +65,7 @@ def crear_pedido(request):
                 # Guardar el pedido en la base de datos
                 pedido = Pedido(
                     id_emple=1,  # Supongamos que el empleado es '1' o recupera el usuario actual
-                    id_caja=1,  # También supongamos que la caja es '1'
+                    id_caja=13,  # También supongamos que la caja es '1'
                     id_venta=1,  # Asociar a una venta (aquí puedes poner la lógica real)
                     tipo_pago=tipo_pago  # Aquí guardamos el tipo de pago
                 )
@@ -92,7 +94,7 @@ def confirmar_pedido(request):
             # Crear el pedido
             pedido = Pedido.objects.create(
                 id_emple=request.user.id,  # Se asume que el usuario está autenticado
-                id_caja=1,
+                id_caja=13,
                 id_venta=1,
                 generado_ped=True,
                 fecha_gene_ped=timezone.now().date(),
@@ -126,7 +128,7 @@ def confirmar_pedido(request):
             pedido.save()
 
             # Verificar y actualizar la caja según el tipo de pago
-            caja = Caja.objects.filter(id=1).first()  # Verifica si la caja es la correcta
+            caja = Caja.objects.filter(id_caja=13).first()  # Verifica si la caja es la correcta
             if caja:
                 if tipo_pago == "efectivo":
                     caja.monto_actual += total_pedido  # Sumar al monto_actual
