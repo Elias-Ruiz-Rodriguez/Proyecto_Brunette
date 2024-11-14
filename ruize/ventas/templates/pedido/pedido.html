@@ -187,7 +187,7 @@
 
                     <button type="button" id="agregarAlaTabla">Agregar</button>
                 </form>
-                
+
             </div>
 
         </div>
@@ -220,7 +220,7 @@
             <button class="boton boton" onclick="egresoIngreso()">Egreso/Ingreso</button>
             <button class="boton boton" onclick="cancelarPedido()">Limpiar</button>
             <button class="boton boton" onclick="confirmarPedido()">Confirmar</button>
-        
+
             <!-- Campo de selección para tipo de pago -->
             <label for="tipo_pago">Tipo de Pago:</label>
             <select name="tipo_pago" id="tipo_pago">
@@ -228,7 +228,7 @@
                 <option value="tarjeta">Tarjeta</option>
             </select>
         </div>
-        
+
         <div class="botones">
             <a href="{% url 'mostrar_menu' %}">
                 <button class="boton boton cancelar-btn">Cancelar</button>
@@ -291,7 +291,7 @@
                 body: JSON.stringify({ caja_id: caja_id, monto: monto, tipo: tipo })
             })
 
-            
+
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -317,14 +317,13 @@
         };
 
         // Función para confirmar el pedido
-
         function confirmarPedido() {
             if (productosSeleccionados.length === 0) {
                 alert("No hay productos seleccionados.");
                 return;
             }
 
-            // Crear el resumen del pedido
+            let tipoPago = document.getElementById('tipo_pago').value;
             let pedidoResumen = "Resumen del Pedido:\n";
             let totalPedido = 0;
 
@@ -342,14 +341,17 @@
                 return; // Si el usuario no confirma, no se hace nada
             }
 
-            // Enviar productos seleccionados a Django para guardar en la base de datos
+            // Enviar productos seleccionados y tipo de pago a Django para guardar en la base de datos
             fetch("{% url 'confirmar_pedido' %}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
                 },
-                body: JSON.stringify({ productos: productosSeleccionados })
+                body: JSON.stringify({
+                    productos: productosSeleccionados,
+                    tipo_pago: tipoPago 
+                })
             })
                 .then(response => response.json())
                 .then(data => {

@@ -84,6 +84,7 @@ def confirmar_pedido(request):
         try:
             data = json.loads(request.body)
             productos = data.get('productos', [])
+            tipo_pago = data.get('tipo_pago')  # Obtener tipo de pago desde la solicitud
             total_pedido = 0
 
             # Crear el pedido
@@ -121,14 +122,24 @@ def confirmar_pedido(request):
             pedido.total_ped = total_pedido
             pedido.save()
 
+            # Verificar y actualizar la caja según el tipo de pago
+            caja = Caja.objects.filter(id=1).first()  # Verifica si la caja es la correcta
+            if caja:
+                if tipo_pago == "efectivo":
+                    caja.monto_actual += total_pedido  # Sumar al monto_actual
+                elif tipo_pago == "tarjeta":
+                    caja.monto_tarjeta_real += total_pedido  # Sumar al monto_tarjeta_real
+                else:
+                    return JsonResponse({"success": False, "error": "Tipo de pago no válido."})
+
+                caja.save()  # Guardar los cambios en la caja
+
             return JsonResponse({"success": True, "pedido_resumen": f"Total: ${total_pedido}"})
         except Exception as e:
             print(e)
             return JsonResponse({"success": False, "error": "Error al procesar el pedido."})
 
     return JsonResponse({"success": False, "error": "Método no permitido."})
-
-
 
 def producto(request):
     query = request.GET.get('product', '')  # Obtener el término de búsqueda
