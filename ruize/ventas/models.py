@@ -46,18 +46,9 @@ class Pedido(models.Model):
     generado_ped = models.BooleanField(default=False)
     fecha_gene_ped = models.DateField(null=True, blank=True)
     hora_gen_ped = models.TimeField(null=True, blank=True)
-    proceso_ped = models.BooleanField(default=False)
-    fecha_pro_ped = models.DateField(null=True, blank=True)
-    hora_pro_ped = models.TimeField(null=True, blank=True)
     listo_ped = models.BooleanField(default=False)
-    fecha_lis_ped = models.DateField(null=True, blank=True)
-    hora_lis_ped = models.TimeField(null=True, blank=True)
     entregado_ped = models.BooleanField(default=False)
-    fecha_ent_ped = models.DateField(null=True, blank=True)
-    hora_ent_ped = models.TimeField(null=True, blank=True)
     pagado_ped = models.BooleanField(default=False)
-    fecha_pago = models.DateField(null=True, blank=True)
-    hora_pago = models.TimeField(null=True, blank=True)
     EFECTIVO = 'efectivo'
     TARJETA = 'tarjeta'
     TIPO_PAGO_CHOICES = [

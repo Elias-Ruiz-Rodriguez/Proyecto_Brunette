@@ -92,7 +92,7 @@ def confirmar_pedido(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            productos = data.get('productos', [])
+            productos = data.get('productos', [])  # Lista de productos
             tipo_pago = data.get('tipo_pago')  # Obtener tipo de pago desde la solicitud
             total_pedido = 0
 
@@ -104,41 +104,42 @@ def confirmar_pedido(request):
             # Crear el pedido
             pedido = Pedido.objects.create(
                 id_emple=user_id,  # Usamos el ID del usuario desde la sesión
-                id_caja=1,
-                id_venta=1,
+                id_caja=1,  # Suponemos que la caja ya está seleccionada
+                id_venta=1,  # Aquí puedes poner la lógica real de venta
                 generado_ped=True,
                 fecha_gene_ped=timezone.now().date(),
                 hora_gen_ped=timezone.now().time(),
                 tipo_pago=tipo_pago  # Aquí agregamos el tipo de pago al crear el pedido
             )
 
+            # Para cada producto en la lista de productos, se crea un detalle de pedido
             for producto_data in productos:
-                producto = Producto.objects.get(id_prod=producto_data['id'])
-                cantidad = producto_data['cantidad']
-                precio_unitario = producto.precio_prod
-                sub_total = precio_unitario * cantidad
-                total_pedido += sub_total
+                producto = Producto.objects.get(id_prod=producto_data['id'])  # Obtener el producto por ID
+                cantidad = producto_data['cantidad']  # Cantidad de producto solicitado
+                precio_unitario = producto.precio_prod  # Obtener el precio unitario del producto
+                sub_total = precio_unitario * cantidad  # Calcular el subtotal para este producto
+                total_pedido += sub_total  # Acumulamos el total del pedido
 
-                # Crear el detalle del pedido
+                # Crear un detalle de pedido para este producto
                 DetallePedido.objects.create(
                     id_pedido=pedido,
                     id_prod=producto,
                     precio_uni_ped=precio_unitario,
                     cant_ped=cantidad,
                     sub_total=sub_total,
-                    total_ped=total_pedido
+                    total_ped=sub_total  # El total del pedido es el subtotal para este producto
                 )
 
-                # Verificar si el producto tiene un stock numérico válido
+                # Verificar si el producto tiene un stock válido y restar la cantidad
                 if producto.stock_actual_prod is not None and not isinstance(producto.stock_actual_prod, str):
-                    producto.stock_actual_prod -= cantidad  # Restar stock si es un número
-                    producto.save()
+                    producto.stock_actual_prod -= cantidad  # Restamos la cantidad al stock
+                    producto.save()  # Guardamos los cambios en el producto
 
-            # Actualizar el total en el pedido
+            # Actualizar el total del pedido
             pedido.total_ped = total_pedido
-            pedido.save()
+            pedido.save()  # Guardamos el pedido con su total final
 
-            # Verificar y actualizar la caja según el tipo de pago
+            # Actualizar la caja según el tipo de pago
             caja = Caja.objects.filter(id_caja=1).first()  # Verifica si la caja es la correcta
             if caja:
                 if tipo_pago == "efectivo":
@@ -148,7 +149,7 @@ def confirmar_pedido(request):
                 else:
                     return JsonResponse({"success": False, "error": "Tipo de pago no válido."})
 
-                caja.save()  # Guardar los cambios en la caja
+                caja.save()  # Guardamos los cambios en la caja
 
             return JsonResponse({"success": True, "pedido_resumen": f"Total: ${total_pedido}"})
         except Exception as e:
@@ -159,6 +160,13 @@ def confirmar_pedido(request):
 
 
 def producto(request):
+    rol_usuario = request.session.get('usuario_rol')
+
+    if rol_usuario not in ["Gerente", "Admin"]:
+        # Si el rol no es gerente o admin, mostrar mensaje de error y redirigir
+        messages.error(request, "No tienes permisos para registrar usuarios.")
+        return redirect('mostrar_menu')
+    
     query = request.GET.get('product', '')  # Obtener el término de búsqueda
     if query:
         productos = Producto.objects.filter(nombre_prod__icontains=query)

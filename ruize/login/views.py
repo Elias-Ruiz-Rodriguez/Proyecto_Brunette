@@ -17,7 +17,11 @@ def inicio_sesion(request):
                 user.ultimo_acceso = timezone.now()
                 user.save()
                 request.session['usuario_nombre'] = f"{user.dni_empl.nombre_empl} {user.dni_empl.apellido_empl}"
+<<<<<<< HEAD
                 request.session['usuario_id'] = user.id_login
+=======
+                request.session['usuario_id'] = user.id_login  # Guardar el ID del usuario
+>>>>>>> 95c831722305d8b6555b4ceec423ebb585f93d5d
                 request.session['usuario_rol'] = user.dni_empl.rol_empl
 
                 inicio_exitoso = True
@@ -33,6 +37,13 @@ def inicio_sesion(request):
 
 def registrar_usuario(request):
     """Vista para manejar el registro de nuevos usuarios"""
+    rol_usuario = request.session.get('usuario_rol')
+
+    if rol_usuario not in ["Gerente", "Admin"]:
+        # Si el rol no es gerente o admin, mostrar mensaje de error y redirigir
+        messages.error(request, "No tienes permisos para registrar usuarios.")
+        return redirect('mostrar_menu')
+    
     if request.method == 'POST':
 
         nombre_empl = request.POST.get('nombre_empl')
@@ -84,6 +95,12 @@ def mostrar_menu(request):
     return render(request, 'menu/menu.html')
 
 def verificar_datos(request):
+    rol_usuario = request.session.get('usuario_rol')
+
+    if rol_usuario not in ["Gerente", "Admin"]:
+        # Si el rol no es gerente o admin, mostrar mensaje de error y redirigir
+        messages.error(request, "No tienes permisos para registrar usuarios.")
+        return redirect('mostrar_menu')
     """Vista para verificar y mostrar datos de empleados y sus logins asociados"""
     empleados = Empleados.objects.all()
     logins = Login.objects.all() 
