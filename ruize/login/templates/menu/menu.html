@@ -86,11 +86,10 @@
         <a href="{% url 'pedido' %}">
             <button class="button">PEDIDO</button>
         </a>
+        
+        {% if request.session.usuario_rol == 'Gerente' or request.session.usuario_rol == 'Admin' %}
         <a href="{% url 'registrar_usuario' %}">
             <button class="button">REGISTRAR USUARIO</button>
-        </a>
-        <a href="{% url 'cierre_caja' %}">
-        <button class="button">CIERRE DE CAJA</button>
         </a>
         <a href="{% url 'producto' %}">
             <button class="button">PRODUCTO</button>
@@ -98,9 +97,11 @@
         <a href="{% url 'verificar_datos' %}">
             <button class="button">REGISTRO DE USUARIO</button>
         </a>
+        {% endif %}
 
-            <button class="button">xd</button>
-
+        <a href="{% url 'cierre_caja' %}">
+            <button class="button">CIERRE DE CAJA</button>
+        </a>
     </div>
 
     <script>
@@ -118,5 +119,3 @@
         updateDateTime(); // Inicializar al cargar
     </script>
 </body>
-
-</html>

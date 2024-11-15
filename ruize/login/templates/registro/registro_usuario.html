@@ -145,6 +145,8 @@
                     <th>Teléfono</th>
                     <th>Fecha Nacimiento</th>
                     <th>Acciones</th>
+                    <th>Usuario</th>
+                    <th>Contraseña</th>
                 </tr>
             </thead>
             <tbody>
@@ -158,24 +160,29 @@
                     <td contenteditable="true" data-field="domicilio_empl">{{ empleado.domicilio_empl }}</td>
                     <td contenteditable="true" data-field="telefono_empl">{{ empleado.telefono_empl }}</td>
                     <td data-field="fecha_nacimiento_emp">
-                        <input type="date" value="{{ empleado.fecha_nacimiento_emp }}"
-                            class="fecha-nacimiento form-control" />
+                        <span class="fecha-nacimiento-text">{{ empleado.fecha_nacimiento_emp }}</span>
+                        <input type="date" value="{{ empleado.fecha_nacimiento_emp }}" class="fecha-nacimiento form-control d-none" />
                     </td>
                     <td>
                         <button class="btn btn-primary btn-sm btn-edit">Editar</button>
                         <button class="btn btn-success btn-sm btn-save d-none">Guardar</button>
                     </td>
+                    <td contenteditable="true" data-field="telefono_empl">{{ empleado.telefono_empl }}</td>
+                    <td contenteditable="true" data-field="telefono_empl">{{ empleado.telefono_empl }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
             $('.btn-edit').on('click', function () {
                 var row = $(this).closest('tr');
-                row.find('[contenteditable="true"]').attr('contenteditable', 'true').addClass('editable-active');
+                row.find('[contenteditable="true"]').addClass('editable-active'); // Activa la edición en campos de texto
+                row.find('.fecha-nacimiento-text').addClass('d-none'); // Oculta el texto de fecha
+                row.find('.fecha-nacimiento').removeClass('d-none'); // Muestra el campo de entrada de fecha
                 row.find('.btn-edit').addClass('d-none');
                 row.find('.btn-save').removeClass('d-none');
             });
@@ -191,7 +198,7 @@
 
                     // Verifica si es la fecha de nacimiento para obtener el valor del campo de entrada de tipo date
                     if (field === 'fecha_nacimiento_emp') {
-                        value = $(this).find('input[type="date"]').val();
+                        value = row.find('.fecha-nacimiento').val();
                     } else {
                         value = $(this).text();
                     }
@@ -208,6 +215,10 @@
                         },
                         success: function (response) {
                             alert(response.message);
+
+                            if (field === 'fecha_nacimiento_emp') {
+                                row.find('.fecha-nacimiento-text').text(value); // Actualiza el texto de la fecha
+                            }
                         },
                         error: function (xhr, status, error) {
                             alert("Error al actualizar el campo.");
@@ -215,12 +226,13 @@
                     });
                 });
 
-                row.find('[contenteditable="true"]').attr('contenteditable', 'false').removeClass('editable-active');
+                // Finaliza la edición
+                row.find('[contenteditable="true"]').removeClass('editable-active');
+                row.find('.fecha-nacimiento-text').removeClass('d-none'); // Muestra el texto de fecha
+                row.find('.fecha-nacimiento').addClass('d-none'); // Oculta el campo de entrada de fecha
                 row.find('.btn-edit').removeClass('d-none');
                 row.find('.btn-save').addClass('d-none');
             });
         });
     </script>
 </body>
-
-</html>
