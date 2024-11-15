@@ -12,6 +12,24 @@
             color: #000;
         }
 
+        .time-date-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-date {
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            text-align: center;
+        }
+
         .container {
             width: 80%;
             margin: 0 auto;
@@ -143,13 +161,15 @@
 </head>
 
 <body>
+    
+    <div class="time-date-container">
+        <div class="time-date" id="current-time">12:00</div>
+        <div class="time-date" id="current-date">01/11/2024</div>
+    </div>
+
     <div class="container">
         <div class="header">
             <p>Cajero: {{ usuario_nombre }}</p>
-            <div class="time-date">
-                <span class="time">09:15:36</span>
-                <span class="date">27/09/2024</span>
-            </div>
         </div>
 
         <div class="pedido-section">
@@ -172,28 +192,26 @@
                 </thead>
                 <tbody>
                     {% if productos %}
-                        {% for producto in productos %}
-                            <tr>
-                                <td>
-                                    <input type="checkbox" class="product-select" 
-                                           data-id="{{ producto.id_prod }}" 
-                                           data-nombre="{{ producto.nombre_prod }}" 
-                                           data-precio="{{ producto.precio_prod }}" 
-                                           data-stock="{{ producto.stock_actual_prod }}">
-                                </td>
-                                <td>
-                                    {% if producto.stock_actual_prod is not None %}
-                                        {{ producto.stock_actual_prod }}
-                                    {% endif %}
-                                </td>
-                                <td>{{ producto.nombre_prod }}</td>
-                                <td>{{ producto.precio_prod }}</td>
-                            </tr>
-                        {% endfor %}
+                    {% for producto in productos %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="product-select" data-id="{{ producto.id_prod }}"
+                                data-nombre="{{ producto.nombre_prod }}" data-precio="{{ producto.precio_prod }}"
+                                data-stock="{{ producto.stock_actual_prod }}">
+                        </td>
+                        <td>
+                            {% if producto.stock_actual_prod is not None %}
+                            {{ producto.stock_actual_prod }}
+                            {% endif %}
+                        </td>
+                        <td>{{ producto.nombre_prod }}</td>
+                        <td>{{ producto.precio_prod }}</td>
+                    </tr>
+                    {% endfor %}
                     {% else %}
-                        <tr>
-                            <td colspan="4" style="text-align:center;">No hay productos disponibles</td>
-                        </tr>
+                    <tr>
+                        <td colspan="4" style="text-align:center;">No hay productos disponibles</td>
+                    </tr>
                     {% endif %}
                 </tbody>
             </table>
@@ -221,51 +239,64 @@
 
             <div class="actions">
                 <a href="{% url 'login:menu' %}">
-                  <button class="boton boton">Volver al Menú</button>
+                    <button class="boton boton">Volver al Menú</button>
                 </a>
             </div>
-    </div>
+        </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const checkboxes = document.querySelectorAll('.product-select');
+        <script>
+            function updateDateTime() {
+                const now = new Date();
+                const optionsDate = { year: 'numeric', month: '2-digit', day: '2-digit' };
+                const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
 
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', handleCheckboxChange);
-                checkbox.addEventListener('click', loadProductData);
-            });
+                document.getElementById('current-date').innerText = now.toLocaleDateString('es-ES', optionsDate);
+                document.getElementById('current-time').innerText = now.toLocaleTimeString('es-ES', optionsTime);
+            }
 
-            function handleCheckboxChange(event) {
-                // Desmarcar todos los checkboxes antes de marcar el actual
-                checkboxes.forEach(cb => {
-                    if (cb !== event.target) {
-                        cb.checked = false;
-                    }
+            // Actualizar la hora y la fecha cada segundo
+            setInterval(updateDateTime, 1000);
+            updateDateTime(); // Inicializar al cargar
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const checkboxes = document.querySelectorAll('.product-select');
+
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', handleCheckboxChange);
+                    checkbox.addEventListener('click', loadProductData);
                 });
-            }
 
-            function loadProductData(event) {
-                const checkbox = event.target;
-                const productId = checkbox.dataset.id;
-                const productName = checkbox.dataset.nombre;
-                const productPrice = checkbox.dataset.precio;
-                const productStock = checkbox.dataset.stock;
-
-                if (checkbox.checked) {
-                    document.getElementById('producto_id').value = productId;
-                    document.getElementById('nombre_prod').value = productName;
-                    document.getElementById('precio_prod').value = productPrice;
-                    document.getElementById('stock_prod').value = productStock;
-                } else {
-                    // Limpiar el formulario si se deselecciona
-                    document.getElementById('producto_id').value = '';
-                    document.getElementById('nombre_prod').value = '';
-                    document.getElementById('precio_prod').value = '';
-                    document.getElementById('stock_prod').value = '';
+                function handleCheckboxChange(event) {
+                    // Desmarcar todos los checkboxes antes de marcar el actual
+                    checkboxes.forEach(cb => {
+                        if (cb !== event.target) {
+                            cb.checked = false;
+                        }
+                    });
                 }
-            }
-        });
-    </script>
+
+                function loadProductData(event) {
+                    const checkbox = event.target;
+                    const productId = checkbox.dataset.id;
+                    const productName = checkbox.dataset.nombre;
+                    const productPrice = checkbox.dataset.precio;
+                    const productStock = checkbox.dataset.stock;
+
+                    if (checkbox.checked) {
+                        document.getElementById('producto_id').value = productId;
+                        document.getElementById('nombre_prod').value = productName;
+                        document.getElementById('precio_prod').value = productPrice;
+                        document.getElementById('stock_prod').value = productStock;
+                    } else {
+                        // Limpiar el formulario si se deselecciona
+                        document.getElementById('producto_id').value = '';
+                        document.getElementById('nombre_prod').value = '';
+                        document.getElementById('precio_prod').value = '';
+                        document.getElementById('stock_prod').value = '';
+                    }
+                }
+            });
+        </script>
 </body>
 
 </html>

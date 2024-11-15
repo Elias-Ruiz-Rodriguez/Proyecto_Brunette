@@ -127,100 +127,49 @@
 
 </head>
 
-<body>
-    <div class="container mt-5">
-        <h2 class="text-center">Edición de Empleados</h2>
-        <div class="text-left mb-4">
-            <a href="{% url 'login:menu' %}" class="btn btn-secondary">Volver al Menú</a>
-        </div>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>DNI</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Rol</th>
-                    <th>Email</th>
-                    <th>Domicilio</th>
-                    <th>Teléfono</th>
-                    <th>Fecha Nacimiento</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for empleado in empleados %}
-                <tr data-id="{{ empleado.dni_empl }}">
-                    <td>{{ empleado.dni_empl }}</td>
-                    <td contenteditable="true" data-field="nombre_empl">{{ empleado.nombre_empl }}</td>
-                    <td contenteditable="true" data-field="apellido_empl">{{ empleado.apellido_empl }}</td>
-                    <td contenteditable="true" data-field="rol_empl">{{ empleado.get_rol_empl_display }}</td>
-                    <td contenteditable="true" data-field="correo_empl">{{ empleado.correo_empl }}</td>
-                    <td contenteditable="true" data-field="domicilio_empl">{{ empleado.domicilio_empl }}</td>
-                    <td contenteditable="true" data-field="telefono_empl">{{ empleado.telefono_empl }}</td>
-                    <td data-field="fecha_nacimiento_emp">
-                        <input type="date" value="{{ empleado.fecha_nacimiento_emp }}"
-                            class="fecha-nacimiento form-control" />
-                    </td>
-                    <td>
-                        <button class="btn btn-primary btn-sm btn-edit">Editar</button>
-                        <button class="btn btn-success btn-sm btn-save d-none">Guardar</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
 
-    <script>
-        $(document).ready(function () {
-            $('.btn-edit').on('click', function () {
-                var row = $(this).closest('tr');
-                row.find('[contenteditable="true"]').attr('contenteditable', 'true').addClass('editable-active');
-                row.find('.btn-edit').addClass('d-none');
-                row.find('.btn-save').removeClass('d-none');
-            });
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Contraseña</th>
+            <th>DNI</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Rol</th>
+            <th>Email</th>
+            <th>Domicilio</th>
+            <th>Teléfono</th>
+            <th>Fecha Nacimiento</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for login in logins %}
+        <tr>
+            <td>{{ login.usuario }}</td>
+            <td>{{ login.contraseña }}</td>
+            <td>{{ login.dni_empl.dni_empl }}</td>
+            <td>{{ login.dni_empl.nombre_empl }}</td>
+            <td>{{ login.dni_empl.apellido_empl }}</td>
+            <td>{{ login.dni_empl.rol_empl }}</td>
+            <td>{{ login.dni_empl.correo_empl }}</td>
+            <td>{{ login.dni_empl.domicilio_empl }}</td>
+            <td>{{ login.dni_empl.telefono_empl }}</td>
+            <td>{{ login.dni_empl.fecha_nacimiento_emp }}</td>
+            <td>
+                <a href="#" class="btn btn-primary btn-sm">Editar</a>
+                <a href="#" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
-            $('.btn-save').on('click', function () {
-                var row = $(this).closest('tr');
-                var dni = row.data('id');
-
-                // Recorre cada campo editable
-                row.find('[contenteditable="true"], .fecha-nacimiento').each(function () {
-                    var field = $(this).data('field');
-                    var value;
-
-                    // Verifica si es la fecha de nacimiento para obtener el valor del campo de entrada de tipo date
-                    if (field === 'fecha_nacimiento_emp') {
-                        value = $(this).find('input[type="date"]').val();
-                    } else {
-                        value = $(this).text();
-                    }
-
-                    // Realiza la solicitud AJAX para actualizar cada campo
-                    $.ajax({
-                        url: '{% url "login:editar_empleado" %}',
-                        type: 'POST',
-                        data: {
-                            'dni': dni,
-                            'field': field,
-                            'value': value,
-                            'csrfmiddlewaretoken': '{{ csrf_token }}'
-                        },
-                        success: function (response) {
-                            alert(response.message);
-                        },
-                        error: function (xhr, status, error) {
-                            alert("Error al actualizar el campo.");
-                        }
-                    });
-                });
-
-                row.find('[contenteditable="true"]').attr('contenteditable', 'false').removeClass('editable-active');
-                row.find('.btn-edit').removeClass('d-none');
-                row.find('.btn-save').addClass('d-none');
-            });
-        });
-    </script>
 </body>
+
+<script>
+    
+</script>
 
 </html>
