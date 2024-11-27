@@ -16,14 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from login import views as login_views  # Importamos las vistas de login
-from ventas import views as ventas_views  # Importamos las vistas de ventas
+from login import views as login_views  
+from ventas import views as ventas_views  
 from caja import views as caja_views
-from django.shortcuts import redirect  # Agregamos redirect para la redirección
+from django.shortcuts import redirect  
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', lambda request: redirect('inicio_sesion')),  # Redirige la raíz al inicio de sesión
+    path('', lambda request: redirect('inicio_sesion')),
     path('inicio_sesion/', login_views.inicio_sesion, name='inicio_sesion'),
     path('menu/', login_views.mostrar_menu, name='mostrar_menu'),
     path('registrar/', login_views.registrar_usuario, name='registrar_usuario'),
@@ -35,8 +35,8 @@ urlpatterns = [
     path('caja/', include('caja.urls', namespace='caja')),
     path('caja/apertura', caja_views.apertura_caja, name='apertura_caja'),
     path('caja/cierre', caja_views.cierre_caja, name='cierre_caja'),
+    path('caja/arqueo_caja', caja_views.arqueo_caja, name='arqueo_caja'),
     path('login/', include('login.urls', namespace='login')),
-    path('registro_prod/', ventas_views.registrar_producto, name='registro'),
     path('registro_producto/', ventas_views.registrar_producto, name='registro_producto'),
     path('ventas/', include('ventas.urls')),
 ]

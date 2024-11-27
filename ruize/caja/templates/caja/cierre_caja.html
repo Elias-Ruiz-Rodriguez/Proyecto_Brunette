@@ -1,12 +1,146 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cierre de Caja</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'caja/cierre_caja.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .user-info {
+            font-size: 16px;
+        }
+
+        .container {
+            width: 500px;
+            background-color: #f7ccf3;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .date-time {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .info input {
+            width: 100%;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: white;
+            color: black;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .info label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .button {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .submit-button {
+            background-color: #db5ac7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .submit-button:hover {
+            background-color: #be3ba6;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            text-align: center;
+        }
+
+        .modal-content button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .modal-content button#confirm-btn {
+            background-color: #db5ac7;
+            color: white;
+        }
+
+        .modal-content button#confirm-btn:hover {
+            background-color: #be3ba6;
+        }
+
+        .modal-content button#cancel-btn {
+            background-color: #db5ac7;
+            color: white;
+        }
+
+        .modal-content button#cancel-btn:hover {
+            background-color: #be3ba6;
+        }
+    </style>
 </head>
+
 <body>
 
     <header class="header">
@@ -29,15 +163,49 @@
             <label for="ingreso-dinero">INGRESAR DINERO EN CAJA</label>
             <input type="text" id="ingreso-dinero" placeholder="0.00">
         </div>
-
-        <div class="buttons">
-            <form method="POST">
+        <div class="button">
+            <form method="POST" id="cierre-caja-form">
                 {% csrf_token %}
-                <button class="cancel-button" type="button" href="{% url 'mostrar_menu' %}">CANCELAR</button>
-                <button class="submit-button" type="submit">CERRAR CAJA</button>
+                <button class="submit-button" type="button" id="cerrar-caja-btn">Cerrar Caja</button>
             </form>
+        </div>
+        <div class="button">
+            <a href="{% url 'login:menu' %}" class="submit-button">Cancelar</a>
         </div>
     </div>
 
+    <!-- Modal -->
+    <div id="confirm-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <p>¿Seguro que quieres cerrar caja?</p>
+            <button id="confirm-btn">Sí</button>
+            <button id="cancel-btn">No</button>
+        </div>
+    </div>
 </body>
+<script>
+    // JavaScript para controlar el modal
+    const cerrarCajaBtn = document.getElementById('cerrar-caja-btn');
+    const confirmModal = document.getElementById('confirm-modal');
+    const confirmBtn = document.getElementById('confirm-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const cierreCajaForm = document.getElementById('cierre-caja-form');
+
+    // Mostrar el modal al hacer clic en "CERRAR CAJA"
+    cerrarCajaBtn.addEventListener('click', () => {
+        confirmModal.style.display = 'block';
+    });
+
+    // Confirmar y enviar el formulario
+    confirmBtn.addEventListener('click', () => {
+        confirmModal.style.display = 'none';
+        cierreCajaForm.submit(); // Envía el formulario
+    });
+
+    // Cancelar y cerrar el modal
+    cancelBtn.addEventListener('click', () => {
+        confirmModal.style.display = 'none';
+    });
+</script>
+
 </html>

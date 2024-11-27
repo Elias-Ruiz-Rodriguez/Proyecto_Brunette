@@ -5,8 +5,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Producto</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'registrar/registro_producto.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #D35CA2;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .back-button {
+            background-color: #D35CA2;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .back-button:hover {
+            background-color: #be3ba6;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #D35CA2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #be3ba6;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,33 +85,32 @@
 
 
             <button type="submit">Registrar Producto</button>
+            <br><br>
         </form>
-        <div class="text-left mb-4">
-            <a href="{% url 'login:menu' %}" class="confirm-button">Volver al Menú</a>
+        <div class="button">
+            <a href="{% url 'login:menu' %}" class="back-button">Volver al Menú</a>
         </div>
     </div>
 
-    <!-- Agrega el script para manejar la visualización de los campos de stock -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const categoriaSelect = document.getElementById('id_categoria_prod');
             const stockFields = [
                 document.getElementById('id_stock_min_prod'),
                 document.getElementById('id_stock_actual_prod'),
-                document.getElementById('id_punto_reposicion_prod'),
                 document.getElementById('id_stock_max_prod')
             ];
 
             function toggleStockFields() {
                 const isMenuSelected = categoriaSelect.value === 'M';
                 stockFields.forEach(field => {
-                    field.disabled = isMenuSelected;  // Deshabilita los campos si es "Plato de Comida"
-                    field.parentElement.style.display = isMenuSelected ? 'none' : 'block';  // Muestra o oculta el campo visualmente
+                    field.disabled = isMenuSelected;
+                    field.parentElement.style.display = isMenuSelected ? 'none' : 'block';
                 });
             }
 
             categoriaSelect.addEventListener('change', toggleStockFields);
-            toggleStockFields();  // Llama a la función al cargar la página
+            toggleStockFields();
         });
     </script>
 </body>

@@ -56,7 +56,6 @@
 
         .modal {
             display: none;
-            /* Oculto por defecto */
             position: fixed;
             top: 0;
             left: 0;
@@ -103,30 +102,23 @@
             margin-top: 15px;
         }
 
-        /* Botones */
         .botones {
             display: flex;
             justify-content: flex-start;
-            /* Los elementos dentro del contenedor estarán alineados a la izquierda */
             align-items: center;
             margin-top: 20px;
         }
 
-        /* Botón Cancelar a la izquierda */
         .cancelar-btn {
             margin-right: auto;
-            /* Empuja el botón hacia la izquierda */
         }
 
-        /* Contenedor de los otros botones (Egreso/Ingreso, Limpiar, Confirmar) */
         .otros-botones {
             display: flex;
             justify-content: end;
             gap: 10px;
-            /* Espacio entre los botones */
         }
 
-        /* Estilo de los botones */
         .boton {
             padding: 10px 20px;
             background-color: #db5ac7;
@@ -145,10 +137,10 @@
 <body>
     <div class="container">
         <div class="header">
-            <p>Cajero: {{ usuario_nombre }}</p>
+            <p>CAJERO: {{ user.username }}</p>
             <div class="time-date">
-                <span class="time">09:15:36</span>
-                <span class="date">27/09/2024</span>
+                <div class="time-date" id="current-time">12:00</div>
+                <div class="time-date" id="current-date">01/11/2024</div>
             </div>
         </div>
 
@@ -221,7 +213,7 @@
 
             <div class="actions">
                 <a href="{% url 'login:menu' %}">
-                  <button class="boton boton">Volver al Menú</button>
+                  <button class="boton boton">Cancelar</button>
                 </a>
             </div>
     </div>
@@ -236,13 +228,23 @@
             });
 
             function handleCheckboxChange(event) {
-                // Desmarcar todos los checkboxes antes de marcar el actual
                 checkboxes.forEach(cb => {
                     if (cb !== event.target) {
                         cb.checked = false;
                     }
                 });
             }
+            function updateDateTime() {
+            const now = new Date();
+            const optionsDate = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+
+            document.getElementById('current-date').innerText = now.toLocaleDateString('es-ES', optionsDate);
+            document.getElementById('current-time').innerText = now.toLocaleTimeString('es-ES', optionsTime);
+            }
+
+            setInterval(updateDateTime, 1000);
+            updateDateTime(); 
 
             function loadProductData(event) {
                 const checkbox = event.target;
@@ -257,7 +259,6 @@
                     document.getElementById('precio_prod').value = productPrice;
                     document.getElementById('stock_prod').value = productStock;
                 } else {
-                    // Limpiar el formulario si se deselecciona
                     document.getElementById('producto_id').value = '';
                     document.getElementById('nombre_prod').value = '';
                     document.getElementById('precio_prod').value = '';

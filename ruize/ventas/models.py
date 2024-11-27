@@ -1,4 +1,5 @@
 from django.db import models
+from login.models import Login
 
 class Producto(models.Model):
     MENU = 'M'
@@ -7,12 +8,9 @@ class Producto(models.Model):
         (MENU, 'Plato de Comida'),
         (GASEOSA, 'Gaseosa'),
     ]
-    
     id_prod = models.AutoField(primary_key=True)
     nombre_prod = models.CharField(max_length=100)
     precio_prod = models.DecimalField(max_digits=10, decimal_places=2)
-    
-    # Campos solo aplicables para gaseosas
     categoria_prod = models.CharField(
         max_length=1,
         choices=CATEGORIA_CHOICES,
@@ -20,14 +18,10 @@ class Producto(models.Model):
     )
     stock_min_prod = models.IntegerField(null=True, blank=True)
     stock_actual_prod = models.IntegerField(default=0, null=True, blank=True)
-    punto_reposicion_prod = models.IntegerField(default=0,null=True, blank=True)
     stock_max_prod = models.IntegerField(default=0,null=True, blank=True)
-    
-    # Campos aplicables para ambos tipos de productos
     existencia_insumo = models.BooleanField(default=True)
     
     def save(self, *args, **kwargs):
-        # Limpiar campos de stock si el producto es de tipo "Menu"
         if self.categoria_prod == self.MENU:
             self.stock_min_prod = None
             self.stock_actual_prod = None
@@ -40,9 +34,9 @@ class Producto(models.Model):
 
 class Pedido(models.Model):
     id_pedido = models.AutoField(primary_key=True)
-    id_emple = models.IntegerField()  # Cambiar a ForeignKey si tienes un modelo Empleado
-    id_caja = models.IntegerField()   # Cambiar a ForeignKey si tienes un modelo Caja
-    id_venta = models.IntegerField()   # Cambiar a ForeignKey si tienes un modelo Venta
+    dni_empl = models.ForeignKey(Login, on_delete=models.CASCADE)
+    id_caja = models.IntegerField()
+    id_venta = models.IntegerField()
     generado_ped = models.BooleanField(default=False)
     fecha_gene_ped = models.DateField(null=True, blank=True)
     hora_gen_ped = models.TimeField(null=True, blank=True)
@@ -59,7 +53,7 @@ class Pedido(models.Model):
     tipo_pago = models.CharField(
         max_length=8,
         choices=TIPO_PAGO_CHOICES,
-        default=EFECTIVO,  # Establece un valor predeterminado si lo deseas
+        default=EFECTIVO,
         null=True, 
         blank=True
     )
