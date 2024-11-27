@@ -33,13 +33,8 @@ body {
 .button {
     padding: 20px;
     font-size: 18px;
-<<<<<<< HEAD
     color: white;
     background-color: #aa2a79;
-=======
-    color: rgb(255, 0, 0);
-    background-color: #ff0000;
->>>>>>> 827d20b4991a1ee70a6e16213f1e6ca99a862c74
     border: none;
     border-radius: 8px;
     cursor: pointer;

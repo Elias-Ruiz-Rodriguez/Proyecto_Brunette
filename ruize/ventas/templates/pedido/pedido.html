@@ -145,10 +145,34 @@
             color: black;
             padding: 5px;
         }
+        
+        .time-date-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-date {
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
+
+    <div class="time-date-container">
+        <div class="time-date" id="current-time">12:00</div>
+        <div class="time-date" id="current-date">01/11/2024</div>
+    </div>
+
     <div class="container">
         <div class="botones">
             <button class="boton boton" id="agregarProductoBtn">Agregar Producto</button>
@@ -263,7 +287,25 @@
 
 
     <script>
+<<<<<<< HEAD
         
+=======
+        // Funcion de la hora
+        function updateDateTime() {
+            const now = new Date();
+            const optionsDate = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+
+            document.getElementById('current-date').innerText = now.toLocaleDateString('es-ES', optionsDate);
+            document.getElementById('current-time').innerText = now.toLocaleTimeString('es-ES', optionsTime);
+        }
+
+        // Actualizar la hora y la fecha cada segundo
+        setInterval(updateDateTime, 1000);
+        updateDateTime(); // Inicializar al cargar
+
+        // Función para mostrar el modal de Ingreso/Egreso
+>>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
         function egresoIngreso() {
             document.getElementById("myModalIngresoEgreso").style.display = "block";
         }

@@ -11,6 +11,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: Arial, sans-serif;
             height: 100vh;
             margin: 0;
         }
@@ -62,7 +63,10 @@
             text-align: center;
             min-width: 200px;
             min-height: 80px;
+<<<<<<< HEAD
         
+=======
+>>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
         }
 
         .button:hover {
@@ -82,8 +86,13 @@
         <a href="{% url 'pedido' %}">
             <button class="button">PEDIDO</button>
         </a>
+<<<<<<< HEAD
+
+        {% if request.session.usuario_rol == 'gerente' or request.session.usuario_rol == 'admin' %}
+=======
         
         {% if request.session.usuario_rol == 'Gerente' or request.session.usuario_rol == 'Admin' %}
+>>>>>>> 95c831722305d8b6555b4ceec423ebb585f93d5d
         <a href="{% url 'registrar_usuario' %}">
             <button class="button">REGISTRAR USUARIO</button>
         </a>
@@ -110,7 +119,13 @@
             document.getElementById('current-time').innerText = now.toLocaleTimeString('es-ES', optionsTime);
         }
 
+<<<<<<< HEAD
         setInterval(updateDateTime, 1000);
         updateDateTime();
+=======
+ 
+        setInterval(updateDateTime, 1000);
+        updateDateTime(); 
+>>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
     </script>
 </body>

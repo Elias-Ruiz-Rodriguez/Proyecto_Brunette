@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edición de Empleados</title>
+    <style>
+        /* General Styles */
+        /* General Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #212529;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 90%;
+            /* Reduce el ancho máximo para centrar mejor */
+            margin: 2rem auto;
+            padding: 15px;
+        }
+
+        /* Typography */
+        h2 {
+            font-size: 1.75rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            font-weight: bold;
+            text-align: center;
+            vertical-align: middle;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #fff;
+            background-color: #007bff;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            /* Permite el desplazamiento horizontal en pantallas pequeñas */
+            margin-top: 1.5rem;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            vertical-align: top;
+            border: 1px solid #dee2e6;
+        }
+
+        /* Form Control */
+        .form-control {
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+    </style>
+
+</head>
+
+<<<<<<< HEAD
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Contraseña</th>
+            <th>DNI</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Rol</th>
+            <th>Email</th>
+            <th>Domicilio</th>
+            <th>Teléfono</th>
+            <th>Fecha Nacimiento</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for login in logins %}
+        <tr>
+            <td>{{ login.usuario }}</td>
+            <td>{{ login.contraseña }}</td>
+            <td>{{ login.dni_empl.dni_empl }}</td>
+            <td>{{ login.dni_empl.nombre_empl }}</td>
+            <td>{{ login.dni_empl.apellido_empl }}</td>
+            <td>{{ login.dni_empl.rol_empl }}</td>
+            <td>{{ login.dni_empl.correo_empl }}</td>
+            <td>{{ login.dni_empl.domicilio_empl }}</td>
+            <td>{{ login.dni_empl.telefono_empl }}</td>
+            <td>{{ login.dni_empl.fecha_nacimiento_emp }}</td>
+            <td>
+                <a href="#" class="btn btn-primary btn-sm">Editar</a>
+                <a href="#" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+
+<script>
+    
+</script>
+
+</html>
+=======
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Edición de Empleados</h2>
+        <div class="text-left mb-4">
+            <a href="{% url 'login:menu' %}" class="btn btn-secondary">Volver al Menú</a>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>DNI</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Rol</th>
+                    <th>Email</th>
+                    <th>Domicilio</th>
+                    <th>Teléfono</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Acciones</th>
+                    <th>Usuario</th>
+                    <th>Contraseña</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for empleado in empleados %}
+                <tr data-id="{{ empleado.dni_empl }}">
+                    <td>{{ empleado.dni_empl }}</td>
+                    <td contenteditable="true" data-field="nombre_empl">{{ empleado.nombre_empl }}</td>
+                    <td contenteditable="true" data-field="apellido_empl">{{ empleado.apellido_empl }}</td>
+                    <td contenteditable="true" data-field="rol_empl">{{ empleado.get_rol_empl_display }}</td>
+                    <td contenteditable="true" data-field="correo_empl">{{ empleado.correo_empl }}</td>
+                    <td contenteditable="true" data-field="domicilio_empl">{{ empleado.domicilio_empl }}</td>
+                    <td contenteditable="true" data-field="telefono_empl">{{ empleado.telefono_empl }}</td>
+                    <td data-field="fecha_nacimiento_emp">
+                        <span class="fecha-nacimiento-text">{{ empleado.fecha_nacimiento_emp }}</span>
+                        <input type="date" value="{{ empleado.fecha_nacimiento_emp }}" class="fecha-nacimiento form-control d-none" />
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm btn-edit">Editar</button>
+                        <button class="btn btn-success btn-sm btn-save d-none">Guardar</button>
+                    </td>
+                    <td contenteditable="true" data-field="telefono_empl">{{ empleado.telefono_empl }}</td>
+                    <td contenteditable="true" data-field="telefono_empl">{{ empleado.telefono_empl }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.btn-edit').on('click', function () {
+                var row = $(this).closest('tr');
+                row.find('[contenteditable="true"]').addClass('editable-active'); // Activa la edición en campos de texto
+                row.find('.fecha-nacimiento-text').addClass('d-none'); // Oculta el texto de fecha
+                row.find('.fecha-nacimiento').removeClass('d-none'); // Muestra el campo de entrada de fecha
+                row.find('.btn-edit').addClass('d-none');
+                row.find('.btn-save').removeClass('d-none');
+            });
+
+            $('.btn-save').on('click', function () {
+                var row = $(this).closest('tr');
+                var dni = row.data('id');
+
+                // Recorre cada campo editable
+                row.find('[contenteditable="true"], .fecha-nacimiento').each(function () {
+                    var field = $(this).data('field');
+                    var value;
+
+                    // Verifica si es la fecha de nacimiento para obtener el valor del campo de entrada de tipo date
+                    if (field === 'fecha_nacimiento_emp') {
+                        value = row.find('.fecha-nacimiento').val();
+                    } else {
+                        value = $(this).text();
+                    }
+
+                    // Realiza la solicitud AJAX para actualizar cada campo
+                    $.ajax({
+                        url: '{% url "login:editar_empleado" %}',
+                        type: 'POST',
+                        data: {
+                            'dni': dni,
+                            'field': field,
+                            'value': value,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        success: function (response) {
+                            alert(response.message);
+
+                            if (field === 'fecha_nacimiento_emp') {
+                                row.find('.fecha-nacimiento-text').text(value); // Actualiza el texto de la fecha
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Error al actualizar el campo.");
+                        }
+                    });
+                });
+
+                // Finaliza la edición
+                row.find('[contenteditable="true"]').removeClass('editable-active');
+                row.find('.fecha-nacimiento-text').removeClass('d-none'); // Muestra el texto de fecha
+                row.find('.fecha-nacimiento').addClass('d-none'); // Oculta el campo de entrada de fecha
+                row.find('.btn-edit').removeClass('d-none');
+                row.find('.btn-save').addClass('d-none');
+            });
+        });
+    </script>
+</body>
+>>>>>>> 95c831722305d8b6555b4ceec423ebb585f93d5d
