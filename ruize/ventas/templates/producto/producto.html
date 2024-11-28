@@ -153,24 +153,18 @@
 </head>
 
 <body>
-    
+
     <div class="time-date-container">
         <div class="time-date" id="current-time">12:00</div>
         <div class="time-date" id="current-date">01/11/2024</div>
     </div>
 
+
     <div class="container">
         <div class="header">
-<<<<<<< HEAD
-            <p>CAJERO: {{ user.username }}</p>
-            <div class="time-date">
-                <div class="time-date" id="current-time">12:00</div>
-                <div class="time-date" id="current-date">01/11/2024</div>
-            </div>
-=======
             <p>Cajero: {{ usuario_nombre }}</p>
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
         </div>
+
 
         <div class="pedido-section">
             <h2>PRODUCTOS</h2>
@@ -216,6 +210,7 @@
                 </tbody>
             </table>
 
+
             <div class="product-edit-section">
                 <h3>Editar Producto</h3>
                 <form method="POST" action="{% url 'editar_producto' %}">
@@ -235,18 +230,18 @@
                     <button class="boton boton">Agregar Producto</button>
                 </a>
 
+
             </div>
+
 
             <div class="actions">
                 <a href="{% url 'login:menu' %}">
-<<<<<<< HEAD
-                  <button class="boton boton">Cancelar</button>
-=======
                     <button class="boton boton">Volver al Menú</button>
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
                 </a>
             </div>
         </div>
+
+
 
         <script>
             function updateDateTime() {
@@ -258,55 +253,18 @@
                 document.getElementById('current-time').innerText = now.toLocaleTimeString('es-ES', optionsTime);
             }
 
-<<<<<<< HEAD
-            function handleCheckboxChange(event) {
-                checkboxes.forEach(cb => {
-                    if (cb !== event.target) {
-                        cb.checked = false;
-                    }
-                });
-            }
-            function updateDateTime() {
-            const now = new Date();
-            const optionsDate = { year: 'numeric', month: '2-digit', day: '2-digit' };
-            const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-
-            document.getElementById('current-date').innerText = now.toLocaleDateString('es-ES', optionsDate);
-            document.getElementById('current-time').innerText = now.toLocaleTimeString('es-ES', optionsTime);
-            }
-
             setInterval(updateDateTime, 1000);
-            updateDateTime(); 
-
-            function loadProductData(event) {
-                const checkbox = event.target;
-                const productId = checkbox.dataset.id;
-                const productName = checkbox.dataset.nombre;
-                const productPrice = checkbox.dataset.precio;
-                const productStock = checkbox.dataset.stock;
-
-                if (checkbox.checked) {
-                    document.getElementById('producto_id').value = productId;
-                    document.getElementById('nombre_prod').value = productName;
-                    document.getElementById('precio_prod').value = productPrice;
-                    document.getElementById('stock_prod').value = productStock;
-                } else {
-                    document.getElementById('producto_id').value = '';
-                    document.getElementById('nombre_prod').value = '';
-                    document.getElementById('precio_prod').value = '';
-                    document.getElementById('stock_prod').value = '';
-=======
-            // Actualizar la hora y la fecha cada segundo
-            setInterval(updateDateTime, 1000);
-            updateDateTime(); // Inicializar al cargar
+            updateDateTime();
 
             document.addEventListener("DOMContentLoaded", function () {
                 const checkboxes = document.querySelectorAll('.product-select');
+
 
                 checkboxes.forEach(checkbox => {
                     checkbox.addEventListener('change', handleCheckboxChange);
                     checkbox.addEventListener('click', loadProductData);
                 });
+
 
                 function handleCheckboxChange(event) {
                     // Desmarcar todos los checkboxes antes de marcar el actual
@@ -315,8 +273,8 @@
                             cb.checked = false;
                         }
                     });
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
                 }
+
 
                 function loadProductData(event) {
                     const checkbox = event.target;
@@ -324,6 +282,7 @@
                     const productName = checkbox.dataset.nombre;
                     const productPrice = checkbox.dataset.precio;
                     const productStock = checkbox.dataset.stock;
+
 
                     if (checkbox.checked) {
                         document.getElementById('producto_id').value = productId;
@@ -340,6 +299,7 @@
                 }
             });
         </script>
+
 </body>
 
 </html>

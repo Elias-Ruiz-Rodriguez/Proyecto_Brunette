@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from .models import Caja, HistorialCaja
+from .models import Caja, HistorialCaja, MovimientoCaja
 from login.models import Login
 from ventas.models import Pedido
 from decimal import Decimal
@@ -99,6 +99,7 @@ def cierre_caja(request):
 def arqueo_caja(request):
     # Usamos prefetch_related para obtener los detalles de cada pedido
     pedidos = Pedido.objects.prefetch_related('detalles').select_related('dni_empl', 'dni_empl__dni_empl').all()
+    movimientos = MovimientoCaja.objects.all()  # Obtenemos los movimientos de caja
 
     # Si quieres calcular el total del pedido por cada uno de los detalles
     for pedido in pedidos:
@@ -106,4 +107,8 @@ def arqueo_caja(request):
 
     return render(request, 'caja/arqueo_caja.html', {
         'pedidos': pedidos,
+        'movimientos': movimientos
     })
+
+
+

@@ -6,7 +6,7 @@ from .models import Producto, Pedido, DetallePedido
 from .forms import ProductoForm
 from decimal import Decimal
 import json
-from caja.models import Caja
+from caja.models import Caja, MovimientoCaja
 from login.models import Login
 
 
@@ -155,7 +155,7 @@ def confirmar_pedido(request):
 def producto(request):
     rol_usuario = request.session.get('usuario_rol')
 
-    if rol_usuario not in ["Gerente", "Admin"]:
+    if rol_usuario not in ["gerente", "admin"]:
 
         messages.error(request, "No tienes permisos para registrar usuarios.")
         return redirect('mostrar_menu')
@@ -171,28 +171,40 @@ def producto(request):
 
 def ingreso_egreso(request):
     if request.method == 'POST':
-    
         data = json.loads(request.body)
         caja_id = data.get('caja_id')
-        monto = Decimal(data.get('monto', 0))  
+        monto = Decimal(data.get('monto', 0))
         tipo = data.get('tipo')
+        observaciones = data.get('observaciones', '')  # Observaciones opcionales
 
         try:
-            caja = Caja.objects.get(id_caja=caja_id) 
+            # Obtener la caja
+            caja = Caja.objects.get(id_caja=caja_id)
 
             if tipo == 'ingreso':
                 caja.monto_actual += monto
-           
+                mensaje = "Ingreso realizado correctamente."
             elif tipo == 'egreso':
-                if caja.monto_actual >= monto:  
+                if caja.monto_actual >= monto:
                     caja.monto_actual -= monto
+                    mensaje = "Egreso realizado correctamente."
                 else:
                     return JsonResponse({'success': False, 'message': 'No hay suficiente dinero en caja para el egreso.'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Tipo de movimiento inválido.'})
 
+            # Registrar el movimiento en MovimientoCaja
+            MovimientoCaja.objects.create(
+                caja=caja,
+                tipo=tipo,
+                monto=monto,
+                observaciones=observaciones
+            )
 
+            # Guardar los cambios en la caja
             caja.save()
 
-            return JsonResponse({'success': True, 'message': f'{tipo.capitalize()} realizado correctamente.'})
+            return JsonResponse({'success': True, 'message': mensaje})
 
         except Caja.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'Caja no encontrada.'})

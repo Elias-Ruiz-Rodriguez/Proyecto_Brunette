@@ -9,11 +9,7 @@
         body {
             font-family: Arial, sans-serif;
             background-color: white;
-<<<<<<< HEAD
             color: black;
-=======
-            color: white;
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -22,7 +18,6 @@
             margin: 0;
         }
 
-<<<<<<< HEAD
         .header {
             position: absolute;
             top: 20px;
@@ -33,24 +28,6 @@
 
         .user-info {
             font-size: 16px;
-=======
-        .time-date-container {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .time-date {
-            padding: 10px;
-            background-color: #ffffff;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-size: 16px;
-            text-align: center;
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
         }
 
         .container {
@@ -61,7 +38,6 @@
             border-radius: 10px;
             text-align: center;
             position: relative;
-<<<<<<< HEAD
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
 
@@ -82,39 +58,6 @@
             font-size: 16px;
             text-align: center;
             margin-bottom: 10px;
-=======
-        }
-
-        .container input[type="text"] {
-            width: 80%;
-            padding: 10px;
-            margin-top: 20px;
-            font-size: 1em;
-            background-color: #db5ac7;
-            color: white;
-            text-align: center;
-            border: none;
-            border-radius: 5px;
-            outline: none;
-            margin-left: auto;
-            /* Centra el input horizontalmente */
-            margin-right: auto;
-            /* Centra el input horizontalmente */
-        }
-
-        .container input[type="text"]::placeholder {
-            color: white;
-            font-weight: bold;
-        }
-
-
-        .info {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            color: #450d38;
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
         }
 
         .info label {
@@ -123,45 +66,10 @@
             font-size: 14px;
         }
 
-<<<<<<< HEAD
         .button {
             display: flex;
             justify-content: center;
             margin-top: 20px;
-=======
-        .info input {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #333;
-            color: #DFF0C0;
-            font-size: 16px;
-            text-align: center;
-            margin-bottom: 20px;
-            /* Añadido margen inferior para separar los inputs de los botones */
-        }
-
-        .buttons {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .cancel-button {
-            background-color: #db5ac7;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .cancel-button:hover {
-            background-color: #be3ba6;
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
         }
 
         .submit-button {
@@ -173,16 +81,12 @@
             font-weight: bold;
             border-radius: 5px;
             cursor: pointer;
-<<<<<<< HEAD
             text-decoration: none;
-=======
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
         }
 
         .submit-button:hover {
             background-color: #be3ba6;
         }
-<<<<<<< HEAD
 
         /* Modal */
         .modal {
@@ -234,8 +138,6 @@
         .modal-content button#cancel-btn:hover {
             background-color: #be3ba6;
         }
-=======
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
     </style>
 </head>
 
@@ -286,7 +188,6 @@
     </div>
 </body>
 <script>
-<<<<<<< HEAD
     // JavaScript para controlar el modal
     const cerrarCajaBtn = document.getElementById('cerrar-caja-btn');
     const confirmModal = document.getElementById('confirm-modal');
@@ -309,20 +210,6 @@
     cancelBtn.addEventListener('click', () => {
         confirmModal.style.display = 'none';
     });
-=======
-    function updateDateTime() {
-        const now = new Date();
-        const optionsDate = { year: 'numeric', month: '2-digit', day: '2-digit' };
-        const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-
-        document.getElementById('current-date').innerText = now.toLocaleDateString('es-ES', optionsDate);
-        document.getElementById('current-time').innerText = now.toLocaleTimeString('es-ES', optionsTime);
-    }
-
-
-    setInterval(updateDateTime, 1000);
-    updateDateTime();
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
 </script>
 
 </html>

@@ -55,3 +55,18 @@ class HistorialCaja(models.Model):
 
     def __str__(self):
         return f"{self.get_accion_display()} - Caja {self.caja.numero_caja} - {self.usuario}"
+
+
+class MovimientoCaja(models.Model):
+    TIPO_CHOICES = [
+        ('ingreso', 'Ingreso'),
+        ('egreso', 'Egreso'),
+    ]
+    caja = models.ForeignKey('Caja', on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
+    monto = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    fecha = models.DateTimeField(auto_now_add=True)
+    observaciones = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.get_tipo_display()} - ${self.monto} - {self.caja.numero_caja} - {self.fecha}"

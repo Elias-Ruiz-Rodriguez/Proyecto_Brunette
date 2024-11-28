@@ -6,8 +6,4 @@ urlpatterns = [
     path('caja/apertura', views.apertura_caja, name='caja'),
     path('menu/', views.mostrar_menu, name='menu'), 
     path('caja/cierre/<int:caja_id>/', views.cierre_caja, name='cierre_caja'),
-<<<<<<< HEAD
-=======
-    path('registro/', views.lista_usuarios, name='lista_usuarios'),
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
 ]

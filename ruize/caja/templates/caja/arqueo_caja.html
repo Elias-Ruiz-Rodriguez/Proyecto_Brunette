@@ -98,20 +98,20 @@
                 </thead>
                 <tbody>
                     {% if pedidos %}
-                        {% for pedido in pedidos %}
-                        <tr>
-                            <td>{{ pedido.id_pedido }}</td>
-                            <td>{{ pedido.dni_empl.dni_empl.nombre_empl }} {{ pedido.dni_empl.dni_empl.apellido_empl }}</td>
-                            <td>{{ pedido.hora_gen_ped }}</td>
-                            <td>
-                                ${{ pedido.total|floatformat:2 }}
-                            </td>
-                        </tr>
-                        {% endfor %}
+                    {% for pedido in pedidos %}
+                    <tr>
+                        <td>{{ pedido.id_pedido }}</td>
+                        <td>{{ pedido.dni_empl.dni_empl.nombre_empl }} {{ pedido.dni_empl.dni_empl.apellido_empl }}</td>
+                        <td>{{ pedido.hora_gen_ped }}</td>
+                        <td>
+                            ${{ pedido.total|floatformat:2 }}
+                        </td>
+                    </tr>
+                    {% endfor %}
                     {% else %}
-                        <tr>
-                            <td colspan="5">No hay pedidos disponibles</td>
-                        </tr>
+                    <tr>
+                        <td colspan="5">No hay pedidos disponibles</td>
+                    </tr>
                     {% endif %}
                 </tbody>
             </table>
@@ -130,33 +130,42 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for movimiento in movimientos %}
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ movimiento.id }}</td>
+                        <td>{{ movimiento.tipo }}</td>
+                        <td>{{ movimiento.fecha|date:"H:i:s" }}</td>
+                        <td>{{ movimiento.monto }}</td>
+                        <td>{{ movimiento.observaciones|default:"Sin observaciones" }}</td>
                     </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
 
-        <button class="logout-button">Cerrar Sesión</button>
+        <button id="resetTablesButton" class="logout-button">Siguiente</button>
     </div>
 </body>
+
+<script>
+    document.getElementById("resetTablesButton").addEventListener("click", function () {
+        // Seleccionar los cuerpos de las tablas
+        const pedidosTableBody = document.querySelector(".table-section:nth-of-type(1) tbody");
+        const movimientosTableBody = document.querySelector(".table-section:nth-of-type(2) tbody");
+
+        // Resetear los datos de la tabla de pedidos
+        if (pedidosTableBody) {
+            pedidosTableBody.innerHTML = '<tr><td colspan="5">No hay pedidos disponibles</td></tr>';
+        }
+
+        // Resetear los datos de la tabla de movimientos
+        if (movimientosTableBody) {
+            movimientosTableBody.innerHTML = '<tr><td colspan="5">Sin registros de movimientos</td></tr>';
+        }
+
+        // Redirigir a otro HTML
+        window.location.href = "inicio_sesion/inicio_sesion.html"; 
+    });
+</script>
 
 </html>
