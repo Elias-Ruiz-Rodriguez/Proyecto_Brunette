@@ -5,10 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Producto</title>
-<<<<<<< HEAD
-=======
-    {% load static %}
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,8 +13,64 @@
             padding: 0;
         }
 
-<<<<<<< HEAD
-=======
+        .form-container {
+            width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #D35CA2;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 90%;
+            padding: 10px;
+            margin: 5px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 38px;
+            background-color: #D35CA2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-button {
+            background-color: #D35CA2;
+            color: white;
+            border: none;
+            padding: 10px 40px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #be3ba6;
+        }
+
+        .submit-button:hover {
+            background-color: #be3ba6;
+        }
+
         .time-date-container {
             position: absolute;
             top: 20px;
@@ -35,88 +87,6 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             font-size: 16px;
             text-align: center;
-        }
-
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
-        .form-container {
-            width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-<<<<<<< HEAD
-            color: #D35CA2;
-=======
-            color: #007BFF;
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
-        }
-
-        label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .back-button {
-<<<<<<< HEAD
-            background-color: #D35CA2;
-=======
-            background-color: #8c5698;
-            /* Color similar a los otros botones */
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-            color: white;
-            margin-top: 10px;
-        }
-
-        .back-button:hover {
-<<<<<<< HEAD
-            background-color: #be3ba6;
-=======
-            background-color: #7a4383;
-            /* Color ligeramente más oscuro al hacer hover */
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-<<<<<<< HEAD
-            background-color: #D35CA2;
-=======
-            background-color: #007BFF;
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-<<<<<<< HEAD
-            background-color: #be3ba6;
-=======
-            background-color: #0056b3;
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
         }
     </style>
 </head>
@@ -135,22 +105,13 @@
 
             {{ form.as_p }}
 
-<<<<<<< HEAD
-
+            <a href="{% url 'login:menu' %}" class="submit-button">Volver al Menú</a>
 
             <button type="submit">Registrar Producto</button>
             <br><br>
         </form>
-        <div class="button">
-            <a href="{% url 'login:menu' %}" class="back-button">Volver al Menú</a>
-        </div>
-=======
-            <button type="submit">Registrar Producto</button><br><br> 
-            <a href="{% url 'login:menu' %}">Volver al Menú</a>
-        </form>
->>>>>>> b92bfe2c465ba23357c57b03234a04e7d8b48c14
     </div>
-        
+
 
 
     <script>
@@ -168,7 +129,6 @@
         setInterval(updateDateTime, 1000);
         updateDateTime();
 
-        // Visualizacion de los campos de stock
         document.addEventListener('DOMContentLoaded', function () {
             const categoriaSelect = document.getElementById('id_categoria_prod');
             const stockFields = [

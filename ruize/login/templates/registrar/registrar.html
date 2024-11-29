@@ -38,7 +38,7 @@
         input[type="date"],
         input[type="tel"],
         select {
-            width: 100%;
+            width: 90%;
             padding: 10px;
             margin: 5px 0 20px;
             border: 1px solid #ccc;
@@ -46,8 +46,7 @@
         }
 
         button {
-            width: 100%;
-            padding: 10px;
+            padding: 10px 70px;
             background-color: #D35CA2;
             color: white;
             border: none;
@@ -60,20 +59,47 @@
             background-color: #D35CA2;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 5px;
+            padding: 10px 40px;
+            border-radius: 4px;
             cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
         }
 
         button:hover {
             background-color: #be3ba6;
         }
+
+        .submit-button:hover {
+            background-color: #be3ba6;
+        }
+
+        .time-date-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-date {
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
+    <div class="time-date-container">
+        <div class="time-date" id="current-time">12:00</div>
+        <div class="time-date" id="current-date">01/11/2024</div>
+    </div>
+
     <div class="form-container">
         <h1>Registrar Usuario</h1>
         <form id="registration-form" method="POST">
@@ -115,18 +141,30 @@
             <label for="fecha_nacimiento_emp">Fecha de Nacimiento:</label>
             <input type="date" id="fecha_nacimiento_emp" name="fecha_nacimiento_emp" required>
 
+            <a href="{% url 'login:menu' %}" class="submit-button">Volver al Menú</a>
+
             <button type="submit">Registrar</button>
 
             <br><br>
 
             <div>
-                <a href="{% url 'login:menu' %}" class="submit-button">Volver al Menú</a>
+                
             </div>
         </form>
     </div>
 </body>
-</form>
-</div>
-</body>
+<script>
+    function updateDateTime() {
+        const now = new Date();
+        const optionsDate = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+
+        document.getElementById('current-date').innerText = now.toLocaleDateString('es-ES', optionsDate);
+        document.getElementById('current-time').innerText = now.toLocaleTimeString('es-ES', optionsTime);
+    }
+
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+</script>
 
 </html>

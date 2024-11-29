@@ -7,7 +7,7 @@ class CajaAdmin(admin.ModelAdmin):
     ordering = ['id_caja'] 
 
 class HistorialCajaAdmin(admin.ModelAdmin):
-    list_display = ('caja', 'usuario', 'accion', 'monto_inicial', 'monto_final', 'fecha', 'observaciones')
+    list_display = ('id_historial', 'usuario', 'accion', 'monto_inicial', 'monto_final', 'fecha', 'observaciones')
     list_filter = ('accion', 'caja', 'usuario')
     search_fields = ('caja__numero_caja', 'usuario__username', 'accion')
     ordering = ('-fecha',)

@@ -11,19 +11,17 @@ def apertura_caja(request):
     user_id = request.session.get('usuario_id') 
 
     if not user_id:
-
         messages.error(request, "No has iniciado sesión.")
         return redirect('inicio_sesion')
 
     try:
-
         usuario = Login.objects.get(id_login=user_id)
     except Login.DoesNotExist:
-
         messages.error(request, "Usuario no encontrado.")
         return redirect('inicio_sesion')
 
-    caja, created = Caja.objects.get_or_create(numero_caja="1")
+    # Buscamos o creamos la caja con un numero específico (usualmente será 1, pero el ID es único)
+    caja, created = Caja.objects.get_or_create(numero_caja="1")  # Aseguramos que solo existe una caja con número 1
     
     if caja.abierto:
         messages.warning(request, "La caja ya está abierta. No es posible abrirla nuevamente.")
@@ -32,8 +30,10 @@ def apertura_caja(request):
     if request.method == 'POST':
         monto_apertura = request.POST.get('monto_apertura')
         if monto_apertura:
+            # Abrimos la caja y asociamos los cambios
             caja.abrir(monto=Decimal(monto_apertura), usuario=usuario)
 
+            # Creamos el historial de la caja
             HistorialCaja.objects.create(
                 caja=caja,
                 usuario=usuario,
@@ -43,6 +43,8 @@ def apertura_caja(request):
                 observaciones="Apertura de caja exitosa"
             )
 
+            # Asociamos el ID de caja con los pedidos futuros
+            # Si algún pedido es realizado después de esta apertura, tiene asociado el id_caja correcto
             messages.success(request, f"Caja {caja.numero_caja} abierta correctamente.")
             return redirect('login:menu')  
 
@@ -97,18 +99,21 @@ def cierre_caja(request):
     return render(request, 'caja/cierre_caja.html', {'caja': caja})
 
 def arqueo_caja(request):
-    # Usamos prefetch_related para obtener los detalles de cada pedido
-    pedidos = Pedido.objects.prefetch_related('detalles').select_related('dni_empl', 'dni_empl__dni_empl').all()
-    movimientos = MovimientoCaja.objects.all()  # Obtenemos los movimientos de caja
+    # Obtener la caja que está abierta (asegurándonos de obtener la caja actual)
+    caja_abierta = Caja.objects.filter(abierto=True).first()
+    
+    if not caja_abierta:
+        # Si no hay una caja abierta, redirigimos a otra página o mostramos un mensaje
+        return render(request, 'caja/no_caja_abierta.html')  # Puedes redirigir a una página de error
 
-    # Si quieres calcular el total del pedido por cada uno de los detalles
-    for pedido in pedidos:
-        pedido.total = sum(detalle.total_ped for detalle in pedido.detalles.all())
+    # Obtener los pedidos realizados en la caja abierta
+    pedidos = Pedido.objects.filter(id_caja=caja_abierta).select_related('dni_empl', 'dni_empl__dni_empl')
+    
+    # Obtener los movimientos de caja
+    movimientos = MovimientoCaja.objects.filter(caja=caja_abierta)
 
     return render(request, 'caja/arqueo_caja.html', {
+        'caja_abierta': caja_abierta,
         'pedidos': pedidos,
-        'movimientos': movimientos
+        'movimientos': movimientos,
     })
-
-
-

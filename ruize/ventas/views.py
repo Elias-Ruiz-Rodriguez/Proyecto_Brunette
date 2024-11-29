@@ -24,26 +24,60 @@ def registrar_producto(request):
 def editar_producto(request):
     if request.method == 'POST':
         producto_id = request.POST.get('producto_id')
-        producto = get_object_or_404(Producto, id_prod=producto_id)
+
+        # Verificar si `producto_id` está presente
+        if not producto_id:
+            messages.error(request, 'El ID del producto no fue proporcionado.')
+            return redirect('producto')
+
+        # Intentar obtener el producto
+        try:
+            producto = get_object_or_404(Producto, id_prod=producto_id)
+        except Exception as e:
+            messages.error(request, f'Error al encontrar el producto: {e}')
+            return redirect('producto')
+
+        # Obtener los valores del formulario
         nuevo_precio = request.POST.get('precio_prod')
         nueva_cantidad = request.POST.get('stock_prod')
 
-        if nuevo_precio and nueva_cantidad:
-            producto.precio_prod = Decimal(nuevo_precio)
-            producto.stock_actual_prod = int(nueva_cantidad)
-            producto.save()
+        # Validar que los valores sean válidos
+        if nuevo_precio and (nueva_cantidad or nueva_cantidad == ''):
+            try:
+                # Actualizar precio si es válido
+                if nuevo_precio:
+                    producto.precio_prod = Decimal(nuevo_precio)
 
-            messages.success(request, 'Producto actualizado correctamente.')
+                # Validar y actualizar stock solo si aplica
+                if producto.stock_actual_prod is not None:
+                    if nueva_cantidad == '':
+                        messages.error(request, 'El stock no puede estar vacío para este producto.')
+                    else:
+                        nueva_cantidad = int(nueva_cantidad)
+                        if nueva_cantidad < producto.stock_actual_prod:
+                            messages.error(request, 'No se puede reducir el stock actual.')
+                        else:
+                            producto.stock_actual_prod = nueva_cantidad
+                elif nueva_cantidad:
+                    # Si el producto no tiene stock_actual_prod, no debería actualizarse
+                    messages.error(request, 'Este producto no admite cambios en el stock.')
+
+                producto.save()
+                messages.success(request, 'Producto actualizado correctamente.')
+
+            except (ValueError, Decimal.InvalidOperation) as e:
+                messages.error(request, f'Error en los datos ingresados: {e}')
         else:
             messages.error(request, 'Por favor ingresa datos válidos.')
 
         return redirect('producto') 
 
-    return redirect('producto')  
+    # Si no es un POST, redirigir
+    return redirect('producto') 
 
 def crear_pedido(request):
     productos = Producto.objects.all()
-   
+
     # Obtener el ID del usuario logueado desde la sesión
     user_id = request.session.get('usuario_id')
     if not user_id:
@@ -66,7 +100,7 @@ def crear_pedido(request):
         if 'producto' in request.POST and 'cantidad' in request.POST and 'tipo_pago' in request.POST:
             producto_id = request.POST.get('producto')
             cantidad = request.POST.get('cantidad')
-            tipo_pago = request.POST.get('tipo_pago')  
+            tipo_pago = request.POST.get('tipo_pago')
 
             # Validar la cantidad ingresada
             if cantidad and cantidad.isdigit() and int(cantidad) > 0:
@@ -76,11 +110,16 @@ def crear_pedido(request):
                 # Crear el pedido con dni_empl relacionado al usuario logueado
                 pedido = Pedido(
                     dni_empl=usuario_logueado,  # Relaciona al usuario logueado
-                    id_caja=caja.id_caja,
-                    id_venta=1,
-                    tipo_pago=tipo_pago
+                    id_caja=caja,  # Asociamos la caja abierta (objeto, no solo el id)
+                    id_venta=1,  # Si es necesario, generar un ID de venta único
+                    tipo_pago=tipo_pago,
+                    fecha_gene_ped=timezone.now().date(),
+                    hora_gen_ped=timezone.now().time(),
                 )
                 pedido.save()
+
+                # Si es necesario, también podrías agregar el detalle del pedido (producto, cantidad, precio, etc.)
+                # DetallePedido.objects.create(pedido=pedido, producto=producto, cantidad=cantidad, sub_total=...)
 
                 return redirect('pedido_exito')
 
@@ -107,11 +146,16 @@ def confirmar_pedido(request):
             if not usuario_logueado:
                 return JsonResponse({"success": False, "error": "Usuario no válido."})
 
+            # Obtener la caja abierta
+            caja = Caja.objects.filter(abierto=True).last()  # Obtener la última caja abierta
+            if not caja:
+                return JsonResponse({"success": False, "error": "No hay una caja abierta."})
+
             # Crear el pedido
             pedido = Pedido.objects.create(
                 dni_empl=usuario_logueado,  # Relaciona al usuario logueado
-                id_caja=1,
-                id_venta=1,
+                id_caja=caja,  # Asignamos la instancia de la caja abierta
+                id_venta=1,  # ID de venta (puedes generarlo o asignarlo según tu lógica)
                 generado_ped=True,
                 fecha_gene_ped=timezone.now().date(),
                 hora_gen_ped=timezone.now().time(),

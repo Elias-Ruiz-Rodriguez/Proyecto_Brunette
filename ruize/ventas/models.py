@@ -1,5 +1,6 @@
 from django.db import models
 from login.models import Login
+from caja.models import Caja
 
 class Producto(models.Model):
     MENU = 'M'
@@ -35,7 +36,7 @@ class Producto(models.Model):
 class Pedido(models.Model):
     id_pedido = models.AutoField(primary_key=True)
     dni_empl = models.ForeignKey(Login, on_delete=models.CASCADE)
-    id_caja = models.IntegerField()
+    id_caja = models.ForeignKey(Caja, on_delete=models.CASCADE)
     id_venta = models.IntegerField()
     generado_ped = models.BooleanField(default=False)
     fecha_gene_ped = models.DateField(null=True, blank=True)

@@ -41,6 +41,7 @@ class Caja(models.Model):
         return f"Caja {self.numero_caja} - {'abierta' if self.abierto else 'cerrada'}"
     
 class HistorialCaja(models.Model):
+    id_historial = models.AutoField(primary_key=True)
     CAJA_CHOICES = [
         ('apertura', 'Apertura'),
         ('cierre', 'Cierre'),

@@ -2,54 +2,38 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
+from django.utils.timezone import now
 from .models import Login, Empleados
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
 
 def inicio_sesion(request):
-    inicio_exitoso = False 
     if request.method == 'POST':
         usuario = request.POST.get('usuario')
         contraseña = request.POST.get('contraseña')
         
         try:
+            user = Login.objects.get(usuario=usuario)
             
-            user = Login.objects.get(usuario=usuario)
-            if user.contraseña == contraseña: 
-
-                user.ultimo_acceso = timezone.now()
-                user.save()
-
-                request.session['usuario_nombre'] = f"{user.dni_empl.nombre_empl} {user.dni_empl.apellido_empl}"
-                request.session['usuario_id'] = user.id_login 
-                request.session['usuario_rol'] = user.dni_empl.rol_empl
-
-                inicio_exitoso = True 
-                return redirect('apertura_caja') 
-            else:
-                inicio_exitoso = False  
-                messages.error(request, "Contraseña incorrecta.")
-        except Login.DoesNotExist:
-            inicio_exitoso = False 
-            user = Login.objects.get(usuario=usuario)
+            # Verificar contraseña
             if user.contraseña == contraseña:
-                user.ultimo_acceso = timezone.now()
+                user.ultimo_acceso = now()
                 user.save()
+
+                # Guardar datos en la sesión
                 request.session['usuario_nombre'] = f"{user.dni_empl.nombre_empl} {user.dni_empl.apellido_empl}"
                 request.session['usuario_id'] = user.id_login
                 request.session['usuario_rol'] = user.dni_empl.rol_empl
 
-                inicio_exitoso = True
-                return redirect('apertura_caja')
+                return redirect('apertura_caja')  # Redirigir a apertura de caja
             else:
-                inicio_exitoso = False 
                 messages.error(request, "Contraseña incorrecta.")
+        
         except Login.DoesNotExist:
-            inicio_exitoso = False
             messages.error(request, "Usuario no encontrado.")
     
-    return render(request, 'inicio_sesion/inicio_sesion.html', {'inicio_exitoso': inicio_exitoso})
+    return render(request, 'inicio_sesion/inicio_sesion.html')
 
 def registrar_usuario(request):
     """Vista para manejar el registro de nuevos usuarios"""
